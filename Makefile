@@ -3,6 +3,12 @@
 
 CPPCHECK = /usr/local/bin/cppcheck
 
+# Output Files
+# ==============================
+
+CPPCHECK_RESULTS = cppcheck-results.xml
+CPPUNIT_RESULTS = cppunit-results.xml
+
 # Compiler Settings
 # ==============================
 
@@ -38,15 +44,15 @@ TEST_OBJS = $(patsubst src/test%,obj/test%,$(TEST_SRCS:.cpp=.o))
 # Bin specific Objects
 # ==============================
 
-PRIMARY_OBJS = $(COMMON_OBJS) obj/mains/primary-main.o
+MAIN_OBJS = $(COMMON_OBJS) obj/mains/main.o
 UNITTEST_OBJS = $(COMMON_OBJS) $(TEST_OBJS) obj/mains/unittest-main.o
 
 # Targets
 # ==============================
 
-.PHONY : new fresh clean vars test cppcheck
+.PHONY : new fresh clean vars test cppcheck ci
 
-new: $(BIN_DIR)primary
+new: $(BIN_DIR)main
 
 fresh: clean new
 
@@ -54,8 +60,8 @@ clean:
 	@echo "Cleaning $(OBJ_DIR), $(BIN_DIR) and C.I. result files."
 	@rm -rf $(OBJ_DIR)
 	@rm -rf $(BIN_DIR)
-	@rm -f cppunit-test-results.xml
-	@rm -f cppcheck-result.xml
+	@rm -f $(CPPUNIT_RESULTS)
+	@rm -f $(CPPCHECK_RESULTS)
 
 vars:
 	@echo "SRCS:"
@@ -66,24 +72,27 @@ vars:
 	@echo "  $(COMMON_OBJS)"
 	@echo "TEST_OBJS:"
 	@echo "  $(TEST_OBJS)"
-	@echo "PRIMARY_OBJS:"
-	@echo "  $(PRIMARY_OBJS)"
+	@echo "MAIN_OBJS:"
+	@echo "  $(MAIN_OBJS)"
 	@echo "UNITTEST_OBJS:"
 	@echo "  $(UNITTEST_OBJS)"
 
 test: $(BIN_DIR)unittest
+	@$(BIN_DIR)unittest --xml
 
 cppcheck:
-	@rm -f cppcheck-result.xml
-	@$(CPPCHECK) --quiet --enable=all --xml --suppress=missingInclude -Isrc/common/ $(SRCS) $(HEADERS) 2> cppcheck-result.xml
+	@rm -f $(CPPCHECK_RESULTS)
+	@$(CPPCHECK) --quiet --enable=all --xml --suppress=missingInclude -Isrc/common/ $(SRCS) $(HEADERS) 2> $(CPPCHECK_RESULTS)
+
+ci: fresh test cppcheck
 
 # Linking
 # ==============================
 
-$(BIN_DIR)primary: $(PRIMARY_OBJS)
-	@echo "Linking PRIMARY_OBJS into $@"
+$(BIN_DIR)main: $(MAIN_OBJS)
+	@echo "Linking MAIN_OBJS into $@"
 	@mkdir -p $(BIN_DIR)
-	@$(CC) $(PRIMARY_OBJS) -o $@
+	@$(CC) $(MAIN_OBJS) -o $@
 
 $(BIN_DIR)unittest: $(UNITTEST_OBJS)
 	@echo "Linking UNITTEST_OBJS into $@"
@@ -94,7 +103,7 @@ $(BIN_DIR)unittest: $(UNITTEST_OBJS)
 # ==============================
 # Compiling mains separately as there is no header file for main files.
 
-$(OBJ_DIR)mains/primary-main.o: $(SRC_DIR)mains/primary-main.cpp
+$(OBJ_DIR)mains/main.o: $(SRC_DIR)mains/main.cpp
 	@echo "Compling $< into $@"
 	@mkdir -p $(dir $@)
 	@$(CC) $(CC_FLAGS) $(CC_INCLUDES) -c $< -o $@
