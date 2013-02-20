@@ -50,7 +50,7 @@ UNITTEST_OBJS = $(COMMON_OBJS) $(TEST_OBJS) obj/mains/unittest-main.o
 # Targets
 # ==============================
 
-.PHONY : new fresh clean vars test cppcheck ci
+.PHONY : new fresh clean vars cppunit cppcheck ci
 
 new: $(BIN_DIR)main
 
@@ -77,14 +77,14 @@ vars:
 	@echo "UNITTEST_OBJS:"
 	@echo "  $(UNITTEST_OBJS)"
 
-test: $(BIN_DIR)unittest
+cppunit: $(BIN_DIR)unittest
 	@$(BIN_DIR)unittest --xml
 
 cppcheck:
 	@rm -f $(CPPCHECK_RESULTS)
 	@$(CPPCHECK) --quiet --enable=all --xml --suppress=missingInclude -Isrc/common/ $(SRCS) $(HEADERS) 2> $(CPPCHECK_RESULTS)
 
-ci: fresh test cppcheck
+ci: fresh cppunit cppcheck
 
 # Linking
 # ==============================
