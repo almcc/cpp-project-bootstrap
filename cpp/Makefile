@@ -50,7 +50,7 @@ UNITTEST_OBJS = $(COMMON_OBJS) $(TEST_OBJS) obj/mains/unittest-main.o
 # Targets
 # ==============================
 
-.PHONY : new fresh clean vars cppunit cppcheck ci
+.PHONY : new fresh clean vars cppunit cppcheck ci install
 
 new: $(BIN_DIR)main
 
@@ -85,6 +85,12 @@ cppcheck:
 	@$(CPPCHECK) --quiet --enable=all --xml --suppress=missingInclude -Isrc/common/ $(SRCS) $(HEADERS) 2> $(CPPCHECK_RESULTS)
 
 ci: fresh cppunit cppcheck
+
+install:
+	@echo "Installing to $(DESTDIR)"
+	mkdir -p $(DESTDIR)/usr/local/bin/
+	cp bin/main $(DESTDIR)/usr/local/bin/
+
 
 # Linking
 # ==============================
