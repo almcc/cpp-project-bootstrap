@@ -5,3 +5,4 @@ cpp/cppcheck-results.xml
 cpp/cppunit-results.xml
 rpmbuild/RPMS/*
 rpmbuild/SRPMS/*
+archive
