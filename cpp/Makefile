@@ -1,8 +1,3 @@
-# Full paths to executables.
-# ==============================
-
-CPPCHECK = /usr/local/bin/cppcheck
-
 # Output Files
 # ==============================
 
@@ -50,7 +45,7 @@ UNITTEST_OBJS = $(COMMON_OBJS) $(TEST_OBJS) obj/mains/unittest-main.o
 # Targets
 # ==============================
 
-.PHONY : new fresh clean vars cppunit cppcheck ci install
+.PHONY : new fresh clean vars cppunit-xml cppunit cppcheck-xml ci install
 
 new: $(BIN_DIR)main
 
@@ -77,14 +72,17 @@ vars:
 	@echo "UNITTEST_OBJS:"
 	@echo "  $(UNITTEST_OBJS)"
 
-cppunit: $(BIN_DIR)unittest
+cppunit-xml: $(BIN_DIR)unittest
 	@$(BIN_DIR)unittest --xml
 
-cppcheck:
-	@rm -f $(CPPCHECK_RESULTS)
-	@$(CPPCHECK) --quiet --enable=all --xml --suppress=missingInclude -Isrc/common/ $(SRCS) $(HEADERS) 2> $(CPPCHECK_RESULTS)
+cppunit: $(BIN_DIR)unittest
+	@$(BIN_DIR)unittest
 
-ci: fresh cppunit cppcheck
+cppcheck-xml:
+	@rm -f $(CPPCHECK_RESULTS)
+	@cppcheck --quiet --enable=all --xml --suppress=missingInclude -Isrc/common/ $(SRCS) $(HEADERS) 2> $(CPPCHECK_RESULTS)
+
+ci: fresh cppunit-xml cppcheck-xml
 
 install:
 	@echo "Installing to $(DESTDIR)"
@@ -95,12 +93,12 @@ install:
 # Linking
 # ==============================
 
-$(BIN_DIR)main: $(MAIN_OBJS)
+$(BIN_DIR)main: $(MAIN_OBJS) $(OBJ_DIR)mains/main.o
 	@echo "Linking MAIN_OBJS into $@"
 	@mkdir -p $(BIN_DIR)
 	@$(CC) $(MAIN_OBJS) -o $@
 
-$(BIN_DIR)unittest: $(UNITTEST_OBJS)
+$(BIN_DIR)unittest: $(UNITTEST_OBJS) $(OBJ_DIR)mains/unittest-main.o
 	@echo "Linking UNITTEST_OBJS into $@"
 	@mkdir -p $(BIN_DIR)
 	@$(CC) $(UNITTEST_OBJS) -lcppunit -o $@

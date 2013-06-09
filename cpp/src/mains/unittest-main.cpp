@@ -17,8 +17,12 @@ int runCli()
   TextUi::TestRunner runner;
   TestFactoryRegistry &registry = TestFactoryRegistry::getRegistry();
   runner.addTest( registry.makeTest() );
-  bool wasSucessful = runner.run( "", false );
-  return wasSucessful;
+  int returnValue = 1;
+  if(runner.run( "", false ))
+  {
+    returnValue = 0;
+  }
+  return returnValue;
 }
 
 /**
@@ -70,7 +74,6 @@ int main( int argc, char **argv)
     cout << "Usage: " << argv[0] << " [--xml]" << " [output_file.xml]"<< endl;
     returnValue = 1;
   }
-
   return returnValue;
 }
 
