@@ -56,7 +56,7 @@ UNITTEST_OBJS = $(COMMON_OBJS) $(TEST_OBJS) obj/mains/unittest-main.o
 # Targets
 # ==============================
 
-.PHONY : new fresh clean vars cppunit-xml cppunit cppcheck-xml ci install uninstall dist
+.PHONY : new fresh clean vars cppunit-xml cppunit cppcheck-xml cppcheck ci-xml install uninstall dist
 
 new: $(BIN_DIR)app
 
@@ -70,20 +70,6 @@ clean:
 	@rm -f $(CPPUNIT_RESULTS)
 	@rm -f $(CPPCHECK_RESULTS)
 
-vars:
-	@echo "SRCS:"
-	@echo "  $(SRCS)"
-	@echo "OBJS:"
-	@echo "  $(OBJS)"
-	@echo "COMMON_OBJS:"
-	@echo "  $(COMMON_OBJS)"
-	@echo "TEST_OBJS:"
-	@echo "  $(TEST_OBJS)"
-	@echo "APP_OBJS:"
-	@echo "  $(APP_OBJS)"
-	@echo "UNITTEST_OBJS:"
-	@echo "  $(UNITTEST_OBJS)"
-
 cppunit-xml: $(BIN_DIR)unittest
 	@$(BIN_DIR)unittest --xml
 
@@ -94,7 +80,13 @@ cppcheck-xml:
 	@rm -f $(CPPCHECK_RESULTS)
 	@cppcheck --quiet --enable=all --xml --suppress=missingInclude -Isrc/common/ $(SRCS) $(HEADERS) 2> $(CPPCHECK_RESULTS)
 
-ci: fresh cppunit-xml cppcheck-xml
+cppcheck:
+	@rm -f $(CPPCHECK_RESULTS)
+	@cppcheck --quiet --enable=all --suppress=missingInclude -Isrc/common/ $(SRCS) $(HEADERS)
+
+ci-xml: fresh cppunit-xml cppcheck-xml
+
+ci: fresh cppunit cppcheck
 
 install:
 	@echo "Installing to $(DESTDIR)"
