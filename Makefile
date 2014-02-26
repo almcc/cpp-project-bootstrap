@@ -2,17 +2,20 @@ WD=$(shell pwd)
 
 .PHONY: release clean
 
-release: 
+release: clean
+	@$(MAKE) -C source/ dist
 	@mkdir -p rpmbuild/SOURCES/
-	@tar cvf rpmbuild/SOURCES/cpp.tar cpp
-	@rpmbuild --define '_topdir $(WD)/rpmbuild' --clean -ba rpmbuild/SPECS/package.spec
-	@rm rpmbuild/SOURCES/cpp.tar
-	@mkdir -p archive/RPMS/
-	@mkdir -p archive/SRPMS/
-	@cp -r rpmbuild/RPMS/* archive/RPMS/
-	@cp rpmbuild/SRPMS/* archive/SRPMS/
+	@cp source/dist/* rpmbuild/SOURCES/
+	@$(MAKE) -C rpmbuild/ rpms
+	@mkdir -p release/
+	@cp source/dist/* release/
+	@cp source/dist/* release/
+	@cp rpmbuild/RPMS/*/* release/
+	@cp rpmbuild/SRPMS/* release/
+
 
 clean:
-	@$(MAKE) -C cpp/ clean
-	@rm -rf rpmbuild/RPMS/*
-	@rm -rf rpmbuild/SRPMS/*
+	@$(MAKE) -C source/ clean
+	@$(MAKE) -C rpmbuild/ clean
+	@rm -rf release/
+

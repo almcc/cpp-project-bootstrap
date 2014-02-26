@@ -1,3 +1,13 @@
+# Release Settings
+# ==============================
+NAME = app
+MAJOR = 0
+MINOR = 1
+FIX = 0
+
+VERSION = $(MAJOR).$(MINOR).$(FIX)
+
+
 # Output Files
 # ==============================
 
@@ -17,6 +27,7 @@ CC_FLAGS = -g -Wall
 SRC_DIR = src/
 OBJ_DIR = obj/
 BIN_DIR = bin/
+DST_DIR = dist/
 
 VPATH = $(SRC_DIR)
 
@@ -39,22 +50,23 @@ TEST_OBJS = $(patsubst src/test%,obj/test%,$(TEST_SRCS:.cpp=.o))
 # Bin specific Objects
 # ==============================
 
-MAIN_OBJS = $(COMMON_OBJS) obj/mains/main.o
+APP_OBJS = $(COMMON_OBJS) obj/mains/app-main.o
 UNITTEST_OBJS = $(COMMON_OBJS) $(TEST_OBJS) obj/mains/unittest-main.o
 
 # Targets
 # ==============================
 
-.PHONY : new fresh clean vars cppunit-xml cppunit cppcheck-xml ci install
+.PHONY : new fresh clean vars cppunit-xml cppunit cppcheck-xml ci install uninstall dist
 
-new: $(BIN_DIR)main
+new: $(BIN_DIR)app
 
 fresh: clean new
 
 clean:
-	@echo "Cleaning $(OBJ_DIR), $(BIN_DIR) and C.I. result files."
+	@echo "Cleaning $(OBJ_DIR), $(DST_DIR) $(BIN_DIR) and C.I. result files."
 	@rm -rf $(OBJ_DIR)
 	@rm -rf $(BIN_DIR)
+	@rm -rf $(DST_DIR)
 	@rm -f $(CPPUNIT_RESULTS)
 	@rm -f $(CPPCHECK_RESULTS)
 
@@ -67,8 +79,8 @@ vars:
 	@echo "  $(COMMON_OBJS)"
 	@echo "TEST_OBJS:"
 	@echo "  $(TEST_OBJS)"
-	@echo "MAIN_OBJS:"
-	@echo "  $(MAIN_OBJS)"
+	@echo "APP_OBJS:"
+	@echo "  $(APP_OBJS)"
 	@echo "UNITTEST_OBJS:"
 	@echo "  $(UNITTEST_OBJS)"
 
@@ -87,16 +99,29 @@ ci: fresh cppunit-xml cppcheck-xml
 install:
 	@echo "Installing to $(DESTDIR)"
 	mkdir -p $(DESTDIR)/usr/local/bin/
-	cp bin/main $(DESTDIR)/usr/local/bin/
+	cp bin/app $(DESTDIR)/usr/local/bin/
+
+uninstall:
+	@echo "Uninstalling from $(DESTDIR)"
+	rm -rf $(DESTDIR)/usr/local/bin/app
+
+dist:
+	@echo "Making distribution"
+	@mkdir -p $(DST_DIR)
+	@mkdir -p $(NAME)-$(VERSION)/
+	@cp -r src/ $(NAME)-$(VERSION)/
+	@cp -r Makefile $(NAME)-$(VERSION)/
+	@tar cvzf $(DST_DIR)/$(NAME)-$(VERSION).tar.gz $(NAME)-$(VERSION)/*
+	@rm -rf $(NAME)-$(VERSION)/
 
 
 # Linking
 # ==============================
 
-$(BIN_DIR)main: $(MAIN_OBJS) $(OBJ_DIR)mains/main.o
-	@echo "Linking MAIN_OBJS into $@"
+$(BIN_DIR)app: $(APP_OBJS) $(OBJ_DIR)mains/app-main.o
+	@echo "Linking APP_OBJS into $@"
 	@mkdir -p $(BIN_DIR)
-	@$(CC) $(MAIN_OBJS) -o $@
+	@$(CC) $(APP_OBJS) -o $@
 
 $(BIN_DIR)unittest: $(UNITTEST_OBJS) $(OBJ_DIR)mains/unittest-main.o
 	@echo "Linking UNITTEST_OBJS into $@"
@@ -107,7 +132,7 @@ $(BIN_DIR)unittest: $(UNITTEST_OBJS) $(OBJ_DIR)mains/unittest-main.o
 # ==============================
 # Compiling mains separately as there is no header file for main files.
 
-$(OBJ_DIR)mains/main.o: $(SRC_DIR)mains/main.cpp
+$(OBJ_DIR)mains/app-main.o: $(SRC_DIR)mains/app-main.cpp
 	@echo "Compling $< into $@"
 	@mkdir -p $(dir $@)
 	@$(CC) $(CC_FLAGS) $(CC_INCLUDES) -c $< -o $@

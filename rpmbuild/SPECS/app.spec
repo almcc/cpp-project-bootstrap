@@ -1,24 +1,20 @@
 Name:           app
-Version:        1.0.0
+Version:        0.1.0
 Release:        1%{?dist}
 Summary:        C++ Command Line Tool
 
-Group:          Development/Tools		
+Group:          Development/Tools
 License:        MIT
 URL:            https://github.com/almcc/cpp-makefile
-Source0:        cpp.tar
+Source0:        %{name}-%{version}.tar.gz
 
 %define  debug_package %{nil}
 
-#BuildRequires:  
-#Requires:       
-
 %description
-
 
 %prep
 
-%setup -n cpp
+%setup -n %{name}-%{version}
 
 %build
 make %{?_smp_mflags}
@@ -26,13 +22,12 @@ make %{?_smp_mflags}
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
-echo $(shell pwd)
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
-/usr/local/bin/main
+/usr/local/bin/app
 
 %defattr(-,root,root,-)
 %doc
