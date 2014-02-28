@@ -1,11 +1,12 @@
 # Release Settings
 # ==============================
 NAME = app
-MAJOR = 0
-MINOR = 1
-FIX = 0
+MAJOR = X
+MINOR = X
+FIX = X
 
 VERSION = $(MAJOR).$(MINOR).$(FIX)
+RELEASE = $(NAME)-$(VERSION)
 
 
 # Output Files
@@ -116,11 +117,11 @@ uninstall:
 dist:
 	@echo "Making distribution"
 	@mkdir -p $(DST_DIR)
-	@mkdir -p $(NAME)-$(VERSION)/
-	@cp -r src/ $(NAME)-$(VERSION)/
-	@cp -r Makefile $(NAME)-$(VERSION)/
-	@tar cvzf $(DST_DIR)/$(NAME)-$(VERSION)-dist.tar.gz $(NAME)-$(VERSION)/*
-	@rm -rf $(NAME)-$(VERSION)/
+	@mkdir -p $(RELEASE)/
+	@cp -r src/ $(RELEASE)/
+	@cp -r Makefile $(RELEASE)/
+	@tar cvzf $(DST_DIR)/$(RELEASE)-dist.tar.gz $(RELEASE)/*
+	@rm -rf $(RELEASE)/
 
 
 # Linking

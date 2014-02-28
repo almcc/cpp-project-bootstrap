@@ -1,5 +1,6 @@
-Name:           app
-Version:        0.1.0
+
+Name:           %{name}
+Version:        %{version}
 Release:        1%{?dist}
 Summary:        C++ Command Line Tool
 
