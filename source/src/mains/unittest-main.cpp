@@ -4,6 +4,7 @@
 #include "cppunit/XmlOutputter.h"
 #include "cppunit/TestResultCollector.h"
 #include "cppunit/TestResult.h"
+#include "cppunit/BriefTestProgressListener.h"
 
 using namespace std;
 using namespace CppUnit;
@@ -14,15 +15,19 @@ using namespace CppUnit;
  */
 int runCli()
 {
-  TextUi::TestRunner runner;
-  TestFactoryRegistry &registry = TestFactoryRegistry::getRegistry();
-  runner.addTest( registry.makeTest() );
-  int returnValue = 1;
-  if(runner.run( "", false ))
-  {
-    returnValue = 0;
-  }
-  return returnValue;
+  TestResult controller;
+
+  TestResultCollector result;
+  controller.addListener( &result );
+
+  BriefTestProgressListener progressListener;
+  controller.addListener( &progressListener );
+
+  TestRunner runner;
+  runner.addTest( TestFactoryRegistry::getRegistry().makeTest() );
+
+  runner.run( controller );
+  return 0;
 }
 
 /**

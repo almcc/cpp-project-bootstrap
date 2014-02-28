@@ -3,12 +3,17 @@ WD=$(shell pwd)
 .PHONY: release clean
 
 release: clean
+	@mkdir -p release/
+
+	@$(MAKE) -C source/ ci-txt
+	cp source/cppunit-results.txt release/app-0.1.0-cppunit-results.txt
+	cp source/cppcheck-results.txt release/app-0.1.0-check-results.txt
+
 	@$(MAKE) -C source/ dist
 	@mkdir -p rpmbuild/SOURCES/
 	@cp source/dist/* rpmbuild/SOURCES/
 
 	@$(MAKE) -C rpmbuild/ rpms
-	@mkdir -p release/
 	@cp source/dist/* release/
 	@cp source/dist/* release/
 	@cp rpmbuild/RPMS/*/* release/

@@ -13,6 +13,8 @@ VERSION = $(MAJOR).$(MINOR).$(FIX)
 
 CPPCHECK_RESULTS = cppcheck-results.xml
 CPPUNIT_RESULTS = cppunit-results.xml
+CPPCHECK_RESULTS_TXT = cppcheck-results.txt
+CPPUNIT_RESULTS_TXT = cppunit-results.txt
 
 # Compiler Settings
 # ==============================
@@ -56,7 +58,7 @@ UNITTEST_OBJS = $(COMMON_OBJS) $(TEST_OBJS) obj/mains/unittest-main.o
 # Targets
 # ==============================
 
-.PHONY : new fresh clean vars cppunit-xml cppunit cppcheck-xml cppcheck ci-xml install uninstall dist
+.PHONY : new fresh clean vars cppunit-xml cppunit-txt cppunit cppcheck-xml cppcheck-txt cppcheck ci ci-xml ci-txt install uninstall dist
 
 new: $(BIN_DIR)app
 
@@ -69,20 +71,34 @@ clean:
 	@rm -rf $(DST_DIR)
 	@rm -f $(CPPUNIT_RESULTS)
 	@rm -f $(CPPCHECK_RESULTS)
+	@rm -f $(CPPUNIT_RESULTS_TXT)
+	@rm -f $(CPPCHECK_RESULTS_TXT)
 
 cppunit-xml: $(BIN_DIR)unittest
 	@$(BIN_DIR)unittest --xml
 
-cppunit: $(BIN_DIR)unittest
-	@$(BIN_DIR)unittest
+cppunit-txt: $(BIN_DIR)unittest
+	@$(BIN_DIR)unittest > $(CPPUNIT_RESULTS_TXT)
+
+cppunit: cppunit-txt
+	@echo
+	@echo "CPP Unit:"
+	@cat $(CPPUNIT_RESULTS_TXT)
+	@echo
 
 cppcheck-xml:
-	@rm -f $(CPPCHECK_RESULTS)
 	@cppcheck --quiet --enable=all --xml --suppress=missingInclude -Isrc/common/ $(SRCS) $(HEADERS) 2> $(CPPCHECK_RESULTS)
 
-cppcheck:
-	@rm -f $(CPPCHECK_RESULTS)
-	@cppcheck --quiet --enable=all --suppress=missingInclude -Isrc/common/ $(SRCS) $(HEADERS)
+cppcheck-txt:
+	@cppcheck --quiet --enable=all --suppress=missingInclude -Isrc/common/ $(SRCS) $(HEADERS) 2> $(CPPCHECK_RESULTS_TXT)
+
+cppcheck: cppcheck-txt
+	@echo
+	@echo "CPP Check:"
+	@cat $(CPPCHECK_RESULTS_TXT)
+	@echo
+
+ci-txt: fresh cppunit-txt cppcheck-txt
 
 ci-xml: fresh cppunit-xml cppcheck-xml
 
