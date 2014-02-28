@@ -127,6 +127,11 @@ dist:
 # ==============================
 releasefile:
 	@echo '#include <string>' > $(SRC_DIR)/common/Release.h
+	@echo 'const std::string NAME = "$(NAME)";' >> $(SRC_DIR)/common/Release.h
+	@echo 'const std::string MAJOR = "$(MAJOR)";' >> $(SRC_DIR)/common/Release.h
+	@echo 'const std::string MINOR = "$(MINOR)";' >> $(SRC_DIR)/common/Release.h
+	@echo 'const std::string FIX = "$(FIX)";' >> $(SRC_DIR)/common/Release.h
+	@echo 'const std::string VERSION = "$(VERSION)";' >> $(SRC_DIR)/common/Release.h
 	@echo 'const std::string RELEASE = "$(RELEASE)";' >> $(SRC_DIR)/common/Release.h
 
 # Linking
