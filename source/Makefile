@@ -119,7 +119,7 @@ dist:
 	@mkdir -p $(NAME)-$(VERSION)/
 	@cp -r src/ $(NAME)-$(VERSION)/
 	@cp -r Makefile $(NAME)-$(VERSION)/
-	@tar cvzf $(DST_DIR)/$(NAME)-$(VERSION).tar.gz $(NAME)-$(VERSION)/*
+	@tar cvzf $(DST_DIR)/$(NAME)-$(VERSION)-dist.tar.gz $(NAME)-$(VERSION)/*
 	@rm -rf $(NAME)-$(VERSION)/
 
 

@@ -6,7 +6,7 @@ Summary:        C++ Command Line Tool
 Group:          Development/Tools
 License:        MIT
 URL:            https://github.com/almcc/cpp-makefile
-Source0:        %{name}-%{version}.tar.gz
+Source0:        %{name}-%{version}-dist.tar.gz
 
 %define  debug_package %{nil}
 

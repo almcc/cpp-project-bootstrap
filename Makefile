@@ -32,6 +32,8 @@ release: clean
 	@cd release/; tar cvzf app-0.1.0-source-reference.tar.gz app-0.1.0-source-reference/*
 	@rm -rf release/app-0.1.0-source-reference
 
+	@ls -lh release/
+
 clean:
 	@$(MAKE) -C source/ clean
 	@$(MAKE) -C rpmbuild/ clean
