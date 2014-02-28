@@ -59,7 +59,7 @@ UNITTEST_OBJS = $(COMMON_OBJS) $(TEST_OBJS) obj/mains/unittest-main.o
 # Targets
 # ==============================
 
-.PHONY : new fresh clean vars cppunit-xml cppunit-txt cppunit cppcheck-xml cppcheck-txt cppcheck ci ci-xml ci-txt install uninstall dist
+.PHONY : new fresh clean vars cppunit-xml cppunit-txt cppunit cppcheck-xml cppcheck-txt cppcheck ci ci-xml ci-txt install uninstall dist releasefile
 
 new: $(BIN_DIR)app
 
@@ -118,11 +118,16 @@ dist:
 	@echo "Making distribution"
 	@mkdir -p $(DST_DIR)
 	@mkdir -p $(RELEASE)/
-	@cp -r src/ $(RELEASE)/
+	@cp -r $(SRC_DIR)/ $(RELEASE)/
 	@cp -r Makefile $(RELEASE)/
 	@tar cvzf $(DST_DIR)/$(RELEASE)-dist.tar.gz $(RELEASE)/*
 	@rm -rf $(RELEASE)/
 
+# Making release header file
+# ==============================
+releasefile:
+	@echo '#include <string>' > $(SRC_DIR)/common/Release.h
+	@echo 'const std::string RELEASE = "$(RELEASE)";' >> $(SRC_DIR)/common/Release.h
 
 # Linking
 # ==============================
@@ -141,7 +146,7 @@ $(BIN_DIR)unittest: $(UNITTEST_OBJS) $(OBJ_DIR)mains/unittest-main.o
 # ==============================
 # Compiling mains separately as there is no header file for main files.
 
-$(OBJ_DIR)mains/app-main.o: $(SRC_DIR)mains/app-main.cpp
+$(OBJ_DIR)mains/app-main.o: $(SRC_DIR)mains/app-main.cpp releasefile
 	@echo "Compling $< into $@"
 	@mkdir -p $(dir $@)
 	@$(CC) $(CC_FLAGS) $(CC_INCLUDES) -c $< -o $@
