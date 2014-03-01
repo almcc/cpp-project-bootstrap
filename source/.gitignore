@@ -1,0 +1,6 @@
+dist/
+bin/
+obj/
+lib/
+cppunit-results.*
+cppcheck-results.*
