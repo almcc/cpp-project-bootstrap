@@ -4,9 +4,10 @@ NAME = app
 MAJOR = X
 MINOR = X
 FIX = X
-
+LABEL = dev
+BUILD = X
 VERSION = $(MAJOR).$(MINOR).$(FIX)
-RELEASE = $(NAME)-$(VERSION)
+RELEASE = $(NAME)-$(VERSION)-$(LABEL)$(BUILD)
 
 # Helpers
 # ==============================
@@ -21,13 +22,13 @@ docs: clean doxygen sphinx
 doxygen:
 	@cp doxygen/Doxyfile doxygen/Doxyfile.filled
 	@echo "PROJECT_NAME = $(shell echo $(NAME) | tr a-z A-Z)" >> doxygen/Doxyfile.filled
-	@echo "PROJECT_NUMBER = $(VERSION)" >> doxygen/Doxyfile.filled
+	@echo "PROJECT_NUMBER = $(RELEASE)" >> doxygen/Doxyfile.filled
 	@cd doxygen; doxygen Doxyfile.filled
 	@$(MAKE) -C doxygen/build/latex all
 	@rm -f doxygen/Doxyfile.filled
 
 sphinx:
-	@export SPHINX_PROJECT_NAME="$(NAME)"; $(MAKE) -C sphinx/ clean html dirhtml latexpdf VERSION=$(VERSION)
+	@export SPHINX_PROJECT_NAME="$(NAME)"; $(MAKE) -C sphinx/ clean html dirhtml latexpdf VERSION=$(VERSION) RELEASE=$(RELEASE)
 
 clean:
 	@rm -rf doxygen/build

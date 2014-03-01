@@ -1,13 +1,13 @@
 
 Name:           %{name}
 Version:        %{version}
-Release:        1%{?dist}
+Release:        %{release_label}%{?dist}
 Summary:        C++ Command Line Tool
 
 Group:          Development/Tools
 License:        MIT
 URL:            https://github.com/almcc/cpp-makefile
-Source0:        %{name}-%{version}-dist.tar.gz
+Source0:        %{name}-%{version}-%{release_label}-dist.tar.gz
 
 %define  debug_package %{nil}
 
@@ -15,7 +15,7 @@ Source0:        %{name}-%{version}-dist.tar.gz
 
 %prep
 
-%setup -n %{name}-%{version}
+%setup -n %{name}-%{version}-%{release_label}
 
 %build
 make %{?_smp_mflags}

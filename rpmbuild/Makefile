@@ -4,9 +4,10 @@ NAME = app
 MAJOR = X
 MINOR = X
 FIX = X
-
+LABEL = dev
+BUILD = X
 VERSION = $(MAJOR).$(MINOR).$(FIX)
-RELEASE = $(NAME)-$(VERSION)
+RELEASE = $(NAME)-$(VERSION)-$(LABEL)$(BUILD)
 
 # Helpers
 # ==============================
@@ -17,7 +18,9 @@ WD=$(shell pwd)
 .PHONY: rpms clean
 
 rpms:
-	@rpmbuild --define '_topdir $(WD)' --clean -ba SPECS/app.spec  --define 'version $(VERSION)' --define 'name $(NAME)'
+	@rpmbuild --define '_topdir $(WD)' --clean -ba SPECS/app.spec  --define 'version $(VERSION)' \
+	                                                               --define 'name $(NAME)' \
+	                                                               --define 'release_label $(LABEL)$(BUILD)'
 
 clean:
 	@rm -rf BUILD

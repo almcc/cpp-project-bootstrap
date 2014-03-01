@@ -4,9 +4,10 @@ NAME = app
 MAJOR = 0
 MINOR = 1
 FIX = 0
-
+LABEL = alpha
+BUILD = 1
 VERSION = $(MAJOR).$(MINOR).$(FIX)
-RELEASE = $(NAME)-$(VERSION)
+RELEASE = $(NAME)-$(VERSION)-$(LABEL)$(BUILD)
 
 # Helpers
 # ==============================
@@ -19,20 +20,20 @@ WD=$(shell pwd)
 release: clean
 	@mkdir -p release/
 
-	@$(MAKE) -C source/ ci-txt dist NAME=$(NAME) MAJOR=$(MAJOR) MINOR=$(MINOR) FIX=$(FIX)
+	@$(MAKE) -C source/ ci-txt dist NAME=$(NAME) MAJOR=$(MAJOR) MINOR=$(MINOR) FIX=$(FIX) LABEL=$(LABEL) BUILD=$(BUILD)
 	cp source/cppunit-results.txt release/$(RELEASE)-cppunit-results.txt
 	cp source/cppcheck-results.txt release/$(RELEASE)-check-results.txt
 
-	@$(MAKE) -C source/ dist NAME=$(NAME) MAJOR=$(MAJOR) MINOR=$(MINOR) FIX=$(FIX)
+	@$(MAKE) -C source/ dist NAME=$(NAME) MAJOR=$(MAJOR) MINOR=$(MINOR) FIX=$(FIX) LABEL=$(LABEL) BUILD=$(BUILD)
 	@mkdir -p rpmbuild/SOURCES/
 	@cp source/dist/* release/
 
 	@cp source/dist/* rpmbuild/SOURCES/
-	@$(MAKE) -C rpmbuild/ rpms NAME=$(NAME) MAJOR=$(MAJOR) MINOR=$(MINOR) FIX=$(FIX)
+	@$(MAKE) -C rpmbuild/ rpms NAME=$(NAME) MAJOR=$(MAJOR) MINOR=$(MINOR) FIX=$(FIX) LABEL=$(LABEL) BUILD=$(BUILD)
 	@cp rpmbuild/RPMS/*/* release/
 	@cp rpmbuild/SRPMS/* release/
 
-	@$(MAKE) -C documentation/ docs NAME=$(NAME) MAJOR=$(MAJOR) MINOR=$(MINOR) FIX=$(FIX)
+	@$(MAKE) -C documentation/ docs NAME=$(NAME) MAJOR=$(MAJOR) MINOR=$(MINOR) FIX=$(FIX) LABEL=$(LABEL) BUILD=$(BUILD)
 
 	@cp documentation/sphinx/_build/latex/$(NAME).pdf release/$(RELEASE)-manual.pdf
 	@mkdir -p release/$(RELEASE)-manual

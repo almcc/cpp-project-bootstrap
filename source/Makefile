@@ -4,10 +4,10 @@ NAME = app
 MAJOR = X
 MINOR = X
 FIX = X
-
+LABEL = dev
+BUILD = X
 VERSION = $(MAJOR).$(MINOR).$(FIX)
-RELEASE = $(NAME)-$(VERSION)
-
+RELEASE = $(NAME)-$(VERSION)-$(LABEL)$(BUILD)
 
 # Output Files
 # ==============================
@@ -131,6 +131,8 @@ releasefile:
 	@echo 'const std::string MAJOR = "$(MAJOR)";' >> $(SRC_DIR)/common/Release.h
 	@echo 'const std::string MINOR = "$(MINOR)";' >> $(SRC_DIR)/common/Release.h
 	@echo 'const std::string FIX = "$(FIX)";' >> $(SRC_DIR)/common/Release.h
+	@echo 'const std::string LABEL = "$(LABEL)";' >> $(SRC_DIR)/common/Release.h
+	@echo 'const std::string BUILD = "$(BUILD)";' >> $(SRC_DIR)/common/Release.h
 	@echo 'const std::string VERSION = "$(VERSION)";' >> $(SRC_DIR)/common/Release.h
 	@echo 'const std::string RELEASE = "$(RELEASE)";' >> $(SRC_DIR)/common/Release.h
 
