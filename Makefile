@@ -4,7 +4,7 @@ NAME = app
 MAJOR = 0
 MINOR = 1
 FIX = 0
-LABEL = alpha
+LABEL = dev
 BUILD = 1
 VERSION = $(MAJOR).$(MINOR).$(FIX)
 RELEASE = $(NAME)-$(VERSION)-$(LABEL)$(BUILD)
@@ -54,4 +54,3 @@ clean:
 	@$(MAKE) -C rpmbuild/ clean
 	@$(MAKE) -C documentation/ clean
 	@rm -rf release/
-
