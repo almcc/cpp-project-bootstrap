@@ -21,8 +21,13 @@ CPPUNIT_RESULTS_TXT = cppunit-results.txt
 # ==============================
 
 CC = g++
-CC_INCLUDES = -Isrc/common/ -I/usr/local/include/ -Isrc/test/common
+CC_INCLUDES = -Isrc/common/ -Isrc/test/common -I/usr/local/include/ -I/usr/include/
 CC_FLAGS = -g -Wall
+
+# Libraries
+# ==============================
+
+LIBS = -l xmlrpc_server_abyss++
 
 # Directories
 # ==============================
@@ -142,12 +147,12 @@ releasefile:
 $(BIN_DIR)app: $(APP_OBJS) $(OBJ_DIR)mains/app-main.o
 	@echo "Linking APP_OBJS into $@"
 	@mkdir -p $(BIN_DIR)
-	@$(CC) $(APP_OBJS) -o $@
+	@$(CC) $(APP_OBJS) $(LIBS) -o $@
 
 $(BIN_DIR)unittest: $(UNITTEST_OBJS) $(OBJ_DIR)mains/unittest-main.o
 	@echo "Linking UNITTEST_OBJS into $@"
 	@mkdir -p $(BIN_DIR)
-	@$(CC) $(UNITTEST_OBJS) -lcppunit -o $@
+	@$(CC) $(UNITTEST_OBJS) $(LIBS) -lcppunit -o $@
 
 # Compiling Mains
 # ==============================

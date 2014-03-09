@@ -7,3 +7,4 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
    :maxdepth: 2
 
    content/about/index
+   content/tests/tests

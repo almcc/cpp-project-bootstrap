@@ -28,7 +28,9 @@ doxygen:
 	@rm -f doxygen/Doxyfile.filled
 
 sphinx:
+	@ln -s $(WD)/../robot/tests/ sphinx/content/tests
 	@export SPHINX_PROJECT_NAME="$(NAME)"; $(MAKE) -C sphinx/ clean html dirhtml latexpdf VERSION=$(VERSION) RELEASE=$(RELEASE)
+	@rm -f sphinx/content/tests
 
 clean:
 	@rm -rf doxygen/build

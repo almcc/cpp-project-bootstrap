@@ -24,6 +24,10 @@ release: clean
 	cp source/cppunit-results.txt release/$(RELEASE)-cppunit-results.txt
 	cp source/cppcheck-results.txt release/$(RELEASE)-check-results.txt
 
+	@$(MAKE) -C robot/ robot NAME=$(NAME) MAJOR=$(MAJOR) MINOR=$(MINOR) FIX=$(FIX) LABEL=$(LABEL) BUILD=$(BUILD)
+	@cp robot/$(RELEASE)-robot-report.html release/$(RELEASE)-robot-report.html
+	@cp robot/$(RELEASE)-robot-log.html release/$(RELEASE)-robot-log.html
+
 	@$(MAKE) -C source/ dist NAME=$(NAME) MAJOR=$(MAJOR) MINOR=$(MINOR) FIX=$(FIX) LABEL=$(LABEL) BUILD=$(BUILD)
 	@mkdir -p rpmbuild/SOURCES/
 	@cp source/dist/* release/
@@ -53,4 +57,5 @@ clean:
 	@$(MAKE) -C source/ clean
 	@$(MAKE) -C rpmbuild/ clean
 	@$(MAKE) -C documentation/ clean
+	@$(MAKE) -C robot/ clean
 	@rm -rf release/

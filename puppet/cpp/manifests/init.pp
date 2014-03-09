@@ -17,6 +17,12 @@ class cpp {
   package { 'cppcheck':
     ensure => installed,
   }
+  package { 'xmlrpc-c-devel':
+    ensure => installed,
+  }
+  package { 'xmlrpc-c-apps':
+    ensure => installed,
+  }
   package { 'doxygen':
     ensure => installed,
   }
@@ -32,6 +38,9 @@ class cpp {
   package { 'python-pip':
     ensure => installed,
   }
+  package { 'tree':
+    ensure => installed,
+  }
   exec { 'sphinx':
     command => 'easy_install -U Sphinx',
     path    => [ '/usr/bin/' ],
@@ -40,5 +49,10 @@ class cpp {
     command => 'pip install sphinx_bootstrap_theme',
     path    => [ '/usr/bin/' ],
     require => [Package['python-pip'], Exec['sphinx']]
+  }
+  exec { 'robotframework':
+    command => 'pip install robotframework',
+    path    => [ '/usr/bin/' ],
+    require => Package['python-pip'],
   }
 }
