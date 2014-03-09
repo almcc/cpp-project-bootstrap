@@ -41,6 +41,9 @@ class development {
   package { 'tree':
     ensure => installed,
   }
+  package { 'boost-devel':
+    ensure => installed,
+  }
   exec { 'sphinx':
     command => 'easy_install -U Sphinx',
     path    => [ '/usr/bin/' ],

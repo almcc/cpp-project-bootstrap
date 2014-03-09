@@ -1,0 +1,2 @@
+LOG_FILE = /var/log/app/app.log
+LOG_LEVEL = NORMAL

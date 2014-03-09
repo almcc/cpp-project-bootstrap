@@ -114,10 +114,13 @@ install:
 	@echo "Installing to $(DESTDIR)"
 	mkdir -p $(DESTDIR)/usr/local/bin/
 	cp bin/app $(DESTDIR)/usr/local/bin/
+	mkdir -p $(DESTDIR)/etc/app
+	cp system/etc/app/* /etc/app/
 
 uninstall:
 	@echo "Uninstalling from $(DESTDIR)"
 	rm -rf $(DESTDIR)/usr/local/bin/app
+	rm -rf $(DESTDIR)/etc/app
 
 dist:
 	@echo "Making distribution"
