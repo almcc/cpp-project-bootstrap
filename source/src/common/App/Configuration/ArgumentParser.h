@@ -1,5 +1,5 @@
-#ifndef ARGUMENT_PARSER_H
-#define ARGUMENT_PARSER_H
+#ifndef ArgumentParser_H
+#define ArgumentParser_H
 
 #include <iostream>
 #include <map>
