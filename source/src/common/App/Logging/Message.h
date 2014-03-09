@@ -1,5 +1,5 @@
-#ifndef Message_h
-#define Message_h
+#ifndef App_Logging_Message_h
+#define App_Logging_Message_h
 
 #include <iostream>
 #include <sstream>

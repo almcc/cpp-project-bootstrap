@@ -1,5 +1,5 @@
-#ifndef Logger_h
-#define Logger_h
+#ifndef App_Logging_Logger_h
+#define App_Logging_Logger_h
 
 #include <iostream>
 #include <sstream>

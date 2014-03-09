@@ -1,5 +1,5 @@
-#ifndef ARGUMENT_PARSER_TEST_H
-#define ARGUMENT_PARSER_TEST_H
+#ifndef App_Configuration_ArgumentParserTest_H
+#define App_Configuration_ArgumentParserTest_H
 
 #include <cppunit/extensions/HelperMacros.h>
 

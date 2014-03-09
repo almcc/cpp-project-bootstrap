@@ -1,5 +1,5 @@
-#ifndef Settings_h
-#define Settings_h
+#ifndef App_Logging_Settings_h
+#define App_Logging_Settings_h
 
 #include <map>
 #include <string>

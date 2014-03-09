@@ -131,7 +131,11 @@ dist:
 # Making release header file
 # ==============================
 releasefile:
-	@echo '#include <string>' > $(SRC_DIR)/common/Release.h
+	@echo '#ifndef Release_H' > $(SRC_DIR)/common/Release.h
+	@echo '#define Release_H' >> $(SRC_DIR)/common/Release.h
+	@echo '' >> $(SRC_DIR)/common/Release.h
+	@echo '#include <string>' >> $(SRC_DIR)/common/Release.h
+	@echo '' >> $(SRC_DIR)/common/Release.h
 	@echo 'const std::string NAME = "$(NAME)";' >> $(SRC_DIR)/common/Release.h
 	@echo 'const std::string MAJOR = "$(MAJOR)";' >> $(SRC_DIR)/common/Release.h
 	@echo 'const std::string MINOR = "$(MINOR)";' >> $(SRC_DIR)/common/Release.h
@@ -140,6 +144,9 @@ releasefile:
 	@echo 'const std::string BUILD = "$(BUILD)";' >> $(SRC_DIR)/common/Release.h
 	@echo 'const std::string VERSION = "$(VERSION)";' >> $(SRC_DIR)/common/Release.h
 	@echo 'const std::string RELEASE = "$(RELEASE)";' >> $(SRC_DIR)/common/Release.h
+	@echo '' >> $(SRC_DIR)/common/Release.h
+	@echo '#endif' >> $(SRC_DIR)/common/Release.h
+
 
 # Linking
 # ==============================
