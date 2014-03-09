@@ -6,28 +6,34 @@
 
 using namespace std;
 
-class LogMessage
+namespace App
 {
-  friend class LogMessageTest;
-  public:
-    LogMessage();
-    ~LogMessage();
+  namespace Logging
+  {
+    class LogMessage
+    {
+      friend class LogMessageTest;
+      public:
+        LogMessage();
+        ~LogMessage();
 
-    string getType();
-    string getDescription();
-    string getTime();
-    string getMessage();
+        string getType();
+        string getDescription();
+        string getTime();
+        string getMessage();
 
-    void setType(string type);
-    void setTime(string time);
-    void setMessage(string message);
-    void setDescription(string description);
+        void setType(string type);
+        void setTime(string time);
+        void setMessage(string message);
+        void setDescription(string description);
 
-  private:
-    string type;
-    string time;
-    string message;
-    string description;
-};
+      private:
+        string type;
+        string time;
+        string message;
+        string description;
+    };
+  }
+}
 
 #endif
