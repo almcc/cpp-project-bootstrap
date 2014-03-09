@@ -12,7 +12,7 @@ namespace App
 {
   namespace Logging
   {
-    enum LogLevel
+    enum Level
     {
       WISPER,
       QUIET,
@@ -21,7 +21,7 @@ namespace App
       SHOUT
     };
 
-    enum LogType
+    enum Type
     {
       FATEL,
       ERROR,
@@ -41,7 +41,7 @@ namespace App
         ~Logger();
 
         // Public setup functions
-        void setLevel(LogLevel level);
+        void setLevel(Level level);
 
         // Public usage functions
         void logFatel(string message);
@@ -54,18 +54,18 @@ namespace App
 
       private:
         // Private functions
-        void log(LogType type, string message);
+        void log(Type type, string message);
         void distribute(LogMessage* message);
         void print(LogMessage* message);
         void store(LogMessage* message);
         void publish(LogMessage* message);
 
         string currentDateTime();
-        string getLogType(LogType type);
-        LogLevel translateTypeToLevel(LogType type);
+        string getLogType(Type type);
+        Level translateTypeToLevel(Type type);
 
         // Private members
-        LogLevel level;
+        Level level;
 
         // Static Private members
         static string separator;

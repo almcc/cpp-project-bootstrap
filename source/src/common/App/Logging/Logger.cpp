@@ -16,7 +16,7 @@ namespace App
 
     }
 
-    void Logger::setLevel(LogLevel level)
+    void Logger::setLevel(Level level)
     {
       this->level = level;
     }
@@ -56,7 +56,7 @@ namespace App
       this->log(DEBUG, message);
     }
 
-    void Logger::log(LogType type, string message)
+    void Logger::log(Type type, string message)
     {
       if(this->translateTypeToLevel(type) <= this->level)
       {
@@ -104,7 +104,7 @@ namespace App
       return buf;
     }
 
-    string Logger::getLogType(LogType type)
+    string Logger::getLogType(Type type)
     {
       string typeStr;
       switch (type)
@@ -136,9 +136,9 @@ namespace App
       return typeStr;
     }
 
-    LogLevel Logger::translateTypeToLevel(LogType type)
+    Level Logger::translateTypeToLevel(Type type)
     {
-      LogLevel level;
+      Level level;
       switch (type)
       {
         case FATEL:
