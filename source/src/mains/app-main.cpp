@@ -1,5 +1,5 @@
-#include "Logger.h"
-#include "ArgumentParser.h"
+#include "App/Logging/Logger.h"
+#include "App/Configuration/ArgumentParser.h"
 
 using namespace App::Logging;
 using namespace App::Configuration;
