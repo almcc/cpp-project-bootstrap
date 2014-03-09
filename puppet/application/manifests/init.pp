@@ -1,0 +1,6 @@
+# Class: application
+#
+#
+class application {
+
+}

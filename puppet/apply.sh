@@ -1,3 +1,3 @@
 #!/bin/bash
 
-puppet apply cpp.pp --modulepath=.
+sudo puppet apply $1 --modulepath=.

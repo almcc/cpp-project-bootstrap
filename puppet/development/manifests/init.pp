@@ -1,7 +1,7 @@
-# Class: cpp
+# Class: development
 #
 #
-class cpp {
+class development {
   package { 'make':
     ensure => installed,
   }
