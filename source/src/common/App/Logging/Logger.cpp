@@ -60,7 +60,7 @@ namespace App
     {
       if(this->translateTypeToLevel(type) <= this->level)
       {
-        LogMessage logMsg;
+        Message logMsg;
         logMsg.setType(this->getLogType(type));
         logMsg.setTime(currentDateTime());
         logMsg.setMessage(message);
@@ -68,13 +68,13 @@ namespace App
       }
     }
 
-    void Logger::distribute(LogMessage* message)
+    void Logger::distribute(Message* message)
     {
       this->print(message);
       this->store(message);
       this->publish(message);
     }
-    void Logger::print(LogMessage* message)
+    void Logger::print(Message* message)
     {
       cout << message->getTime() <<
               this->separator <<
@@ -84,12 +84,12 @@ namespace App
               endl;
     }
 
-    void Logger::store(LogMessage* message)
+    void Logger::store(Message* message)
     {
 
     }
 
-    void Logger::publish(LogMessage* message)
+    void Logger::publish(Message* message)
     {
 
     }

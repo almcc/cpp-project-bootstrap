@@ -4,7 +4,7 @@
 #include <iostream>
 #include <sstream>
 
-#include "App/Logging/LogMessage.h"
+#include "App/Logging/Message.h"
 
 using namespace std;
 
@@ -55,10 +55,10 @@ namespace App
       private:
         // Private functions
         void log(Type type, string message);
-        void distribute(LogMessage* message);
-        void print(LogMessage* message);
-        void store(LogMessage* message);
-        void publish(LogMessage* message);
+        void distribute(Message* message);
+        void print(Message* message);
+        void store(Message* message);
+        void publish(Message* message);
 
         string currentDateTime();
         string getLogType(Type type);

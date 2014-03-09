@@ -1,5 +1,5 @@
-#ifndef LogMessage_h
-#define LogMessage_h
+#ifndef Message_h
+#define Message_h
 
 #include <iostream>
 #include <sstream>
@@ -10,12 +10,12 @@ namespace App
 {
   namespace Logging
   {
-    class LogMessage
+    class Message
     {
-      friend class LogMessageTest;
+      friend class MessageTest;
       public:
-        LogMessage();
-        ~LogMessage();
+        Message();
+        ~Message();
 
         string getType();
         string getDescription();
