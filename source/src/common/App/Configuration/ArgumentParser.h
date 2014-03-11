@@ -7,6 +7,8 @@
 #include <string>
 #include <set>
 
+#include "App/Configuration/Settings.h"
+
 using namespace std;
 
 namespace App
@@ -22,21 +24,19 @@ namespace App
         ~ArgumentParser();
 
         bool parse(int argc, char *argv[]);
-        bool defineAlias(string alias, string actual);
 
-        bool isFlag(string flag);
-        bool isOption(string option);
-        string getOption(string option);
+        bool defineOption(string optionName, string defaultValue);
+
+        void exportOptions(Settings* settings);
 
       private:
 
         bool parseArg(string arg);
-        bool setAlias(string alias);
         bool setFlag(string flag);
         bool setOption(string optionValue);
 
-        set<string> flags;
-        map<string, string> aliases;
+        // set<string> flags;
+        // map<string, string> aliases;
         map<string, string> options;
     };
   }

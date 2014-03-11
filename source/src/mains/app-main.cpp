@@ -1,5 +1,6 @@
 #include "App/Logging/Logger.h"
 #include "App/Configuration/FileParser.h"
+#include "App/Configuration/ArgumentParser.h"
 #include "App/Configuration/Settings.h"
 
 using namespace App::Logging;
@@ -17,14 +18,21 @@ int main( int argc, char **argv)
 
   Settings settings;
 
-  FileParser parser;
-  parser.parse("/etc/app/settings.txt", &settings);
+  // Load settings from a file.
+  FileParser fparser;
+  fparser.parse("/etc/app/settings.txt", &settings);
 
-  cout << settings.get("LOG_FILE") << endl;
-  cout << settings.get("LOG_LEVEL") << endl;
-  cout << settings.get("NONSENCE") << endl;
+  // Overide settings with the command line.
+  ArgumentParser aparser;
+  aparser.defineOption("LOG_FILE", "/var/log/app/app.log");
+  aparser.defineOption("LOG_LEVEL", "NORMAL");
+  aparser.parse(argc, argv);
+  aparser.exportOptions(&settings);
 
   Logger log;
-  log.logError("Error message here.");
+  log.setLevel(settings.get("LOG_LEVEL"));
+  log.logSuccess("Setting Loaded.");
+
+  log.logInformation("Exiting.");
   return returnValue;
 }

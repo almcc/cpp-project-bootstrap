@@ -42,6 +42,7 @@ namespace App
 
         // Public setup functions
         void setLevel(Level level);
+        void setLevel(string level);
 
         // Public usage functions
         void logFatel(string message);

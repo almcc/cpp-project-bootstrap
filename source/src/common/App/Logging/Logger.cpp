@@ -21,6 +21,34 @@ namespace App
       this->level = level;
     }
 
+    void Logger::setLevel(string level)
+    {
+      if(level == "WISPER")
+      {
+        this->setLevel(WISPER);
+      }
+      else if(level == "QUIET")
+      {
+        this->setLevel(QUIET);
+      }
+      else if(level == "NORMAL")
+      {
+        this->setLevel(NORMAL);
+      }
+      else if(level == "LOUD")
+      {
+        this->setLevel(LOUD);
+      }
+      else if(level == "SHOUT")
+      {
+        this->setLevel(SHOUT);
+      }
+      else
+      {
+        this->setLevel(SHOUT);
+      }
+    }
+
     void Logger::logFatel(string message)
     {
       this->log(FATEL, message);

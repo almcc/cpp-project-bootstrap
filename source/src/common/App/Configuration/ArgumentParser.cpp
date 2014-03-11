@@ -31,73 +31,39 @@ namespace App
       return success;
     }
 
-    bool ArgumentParser::defineAlias(string alias, string actual)
+    bool ArgumentParser::defineOption(string optionName, string defaultValue)
     {
-      this->aliases.insert(make_pair(alias, actual));
+      this->options.insert(make_pair(optionName, defaultValue));
       return true;
     }
 
-    bool ArgumentParser::isFlag(string flag)
+    void ArgumentParser::exportOptions(Settings* settings)
     {
-      bool success = false;
-      set<string>::iterator it;
-      it = this->flags.find(flag);
-      if(it != this->flags.end())
+      std::map<std::string, std::string>::iterator it;
+      for (it = this->options.begin(); it != this->options.end(); ++it)
       {
-        success = true;
+        settings->set(it->first, it->second);
       }
-      return success;
-    }
-
-    bool ArgumentParser::isOption(string option)
-    {
-      bool success = false;
-      if(this->getOption(option) != "")
-      {
-        success = true;
-      }
-      return success;
-    }
-
-    string ArgumentParser::getOption(string option)
-    {
-      string value = "";
-
-      map<string,string>::iterator it;
-      it = this->options.find(option);
-      if(it != this->options.end())
-      {
-        value = it->second;
-      }
-
-      return value;
     }
 
     bool ArgumentParser::parseArg(string arg)
     {
       bool success = false;
 
-      string alias = "-";
       string flag = "--";
       string option = "=";
 
-      std::size_t aliasPos = arg.find(alias);
       std::size_t flagPos = arg.find(flag);
       std::size_t optionPos = arg.find(option);
 
-      bool aliasFound = aliasPos!=std::string::npos;
       bool flagFound = flagPos!=std::string::npos;
       bool optionFound = optionPos!=std::string::npos;
 
-      if( aliasFound && !flagFound && !optionFound )
-      {
-        success = this->setAlias(arg);
-      }
-      else if( aliasFound && flagFound && !optionFound )
+      if( flagFound && !optionFound )
       {
         success = this->setFlag(arg);
       }
-      else if( !aliasFound && !flagFound && optionFound )
+      else if( flagFound && optionFound )
       {
         success = this->setOption(arg);
       }
@@ -105,43 +71,40 @@ namespace App
       return success;
     }
 
-    bool ArgumentParser::setAlias(string alias)
-    {
-      bool success = false;
-      alias = alias.substr(1,alias.length());
-
-      if(alias.length() != 1)
-      {
-        this->setAlias(alias.substr(1,alias.length()));
-        alias = alias = alias.substr(0,1);
-      }
-
-      map<string,string>::iterator it;
-      it = this->aliases.find(alias);
-      if(it != this->aliases.end())
-      {
-        this->flags.insert(it->second);
-        success = true;
-      }
-      return success;
-
-    }
-
+    /**
+     * A flag is just an option that will default to a value of TRUE.
+     * @param  flag [description]
+     * @return      [description]
+     */
     bool ArgumentParser::setFlag(string flag)
     {
-      bool success = true;
+      bool success = false;
       flag = flag.substr(2,flag.length());
-      this->flags.insert(flag);
+
+      map<string,string>::iterator it;
+      it = this->options.find(flag);
+      if(it != this->options.end())
+      {
+        it->second = "TRUE";
+        success = true;
+      }
+
       return success;
     }
 
     bool ArgumentParser::setOption(string optionValue)
     {
-      bool success = true;
-      string option = optionValue.substr(0,optionValue.find("="));
-      string value = optionValue.substr(optionValue.find("=")+1,optionValue.length());
+      bool success = false;
+      string option = optionValue.substr(2, optionValue.find("=")-2);
+      string value = optionValue.substr(optionValue.find("=")+1, optionValue.length());
 
-      this->options.insert(make_pair(option, value));
+      map<string,string>::iterator it;
+      it = this->options.find(option);
+      if(it != this->options.end())
+      {
+        it->second = value;
+        success = true;
+      }
 
       return success;
     }
