@@ -33,6 +33,7 @@ LIBS = -l xmlrpc_server_abyss++
 # ==============================
 
 SRC_DIR = src/
+SYS_DIR = system/
 OBJ_DIR = obj/
 BIN_DIR = bin/
 LIB_DIR = lib/
@@ -130,7 +131,7 @@ install:
 	mkdir -p $(DESTDIR)/usr/local/bin/
 	cp bin/app $(DESTDIR)/usr/local/bin/
 	mkdir -p $(DESTDIR)/etc/app
-	cp system/etc/app/* /etc/app/
+	cp system/etc/app/* $(DESTDIR)/etc/app/
 
 uninstall:
 	@echo "Uninstalling from $(DESTDIR)"
@@ -142,6 +143,7 @@ dist:
 	@mkdir -p $(DST_DIR)
 	@mkdir -p $(RELEASE)/
 	@cp -r $(SRC_DIR)/ $(RELEASE)/
+	@cp -r $(SYS_DIR)/ $(RELEASE)/
 	@cp -r Makefile $(RELEASE)/
 	@tar cvzf $(DST_DIR)/$(RELEASE)-dist.tar.gz $(RELEASE)/*
 	@rm -rf $(RELEASE)/

@@ -29,6 +29,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 /usr/local/bin/app
+/etc/app/*
 
 %defattr(-,root,root,-)
 %doc
