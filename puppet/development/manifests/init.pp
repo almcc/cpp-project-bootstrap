@@ -44,6 +44,12 @@ class development {
   package { 'boost-devel':
     ensure => installed,
   }
+  package { 'swig':
+    ensure => installed,
+  }
+  package { 'python-devel':
+    ensure => installed,
+  }
   exec { 'sphinx':
     command => 'easy_install -U Sphinx',
     path    => [ '/usr/bin/' ],
