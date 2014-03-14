@@ -50,6 +50,12 @@ class development {
   package { 'python-devel':
     ensure => installed,
   }
+  package { 'boost-devel':
+    ensure => installed,
+  }
+  package { 'boost-static':
+    ensure => installed,
+  }
   exec { 'sphinx':
     command => 'easy_install -U Sphinx',
     path    => [ '/usr/bin/' ],

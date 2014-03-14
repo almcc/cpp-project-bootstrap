@@ -25,18 +25,14 @@ CC_INCLUDES = -Isrc/common/ \
 							-Isrc/test/common \
 							-I/usr/local/include/ \
 							-I/usr/include/
-CC_FLAGS = -g -Wall -fPIC
+CC_FLAGS = -g -Wall
+LK_FLAGS =
 
-# (Required) Shared Libraries
+# (Required) Libraries
 # ==============================
 
-SHARED_LIB_INC = -L/usr/lib -L/usr/lib64
-SHARED_LIBS = -l xmlrpc_server_abyss++
-
-# (Required) Static Libraries
-# ==============================
-
-STATIC_LIB_INC =
+LIB_INC = -L/usr/lib -L/usr/lib64
+SHARED_LIBS =
 STATIC_LIBS =
 
 # Directories
@@ -195,12 +191,12 @@ $(LIB_DIR)$(LIB_A): $(LIB_OBJS)
 $(BIN_DIR)$(NAME): $(APP_OBJS) $(OBJ_DIR)mains/$(NAME)-main.o
 	@echo "Linking APP_OBJS into $@"
 	@mkdir -p $(BIN_DIR)
-	@$(CC) $(APP_OBJS) $(SHARED_LIB_INC) $(SHARED_LIBS) -o $@
+	@$(CC) $(LK_FLAGS) $(APP_OBJS) $(LIB_INC) -Wl,-Bstatic $(STATIC_LIBS) -Wl,-Bdynamic $(SHARED_LIBS) -Wl,--as-needed -o $@
 
 $(BIN_DIR)unittest: $(UNITTEST_OBJS) $(OBJ_DIR)mains/unittest-main.o
 	@echo "Linking UNITTEST_OBJS into $@"
 	@mkdir -p $(BIN_DIR)
-	@$(CC) $(UNITTEST_OBJS) $(SHARED_LIB_INC) $(SHARED_LIBS) -lcppunit -o $@
+	@$(CC) $(LK_FLAGS) $(UNITTEST_OBJS) $(LIB_INC) -Wl,-Bstatic $(STATIC_LIBS) -Wl,-Bdynamic $(SHARED_LIBS) -lcppunit -Wl,--as-needed -o $@
 
 # Compiling Mains
 # ==============================
