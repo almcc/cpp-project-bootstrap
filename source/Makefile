@@ -33,7 +33,7 @@ LIBS = -l xmlrpc_server_abyss++
 # ==============================
 
 SRC_DIR = src/
-SYS_DIR = system/
+SYS_DIR = sys/
 OBJ_DIR = obj/
 BIN_DIR = bin/
 LIB_DIR = lib/
@@ -57,14 +57,6 @@ COMMON_OBJS = $(patsubst src/common%,obj/common%,$(COMMON_SRCS:.cpp=.o))
 TEST_SRCS = $(shell for file in `find src/test -name *.cpp`; do echo $$file; done)
 TEST_OBJS = $(patsubst src/test%,obj/test%,$(TEST_SRCS:.cpp=.o))
 
-# Swig
-# ==============================
-
-SWIG_INT = src/swig/Library.swig
-SWIG_PY = src/swig/Library.py
-SWIG_SRC = src/swig/Library_wrap.cxx
-SWIG_OBJ = obj/swig/Library_wrap.o
-
 # Bin specific Objects
 # ==============================
 
@@ -80,7 +72,7 @@ new: bins libs
 
 bins: $(BIN_DIR)app
 
-libs: $(LIB_DIR)_Library.so
+libs:
 
 fresh: clean new
 
@@ -89,12 +81,11 @@ clean:
 	@rm -rf $(OBJ_DIR)
 	@rm -rf $(BIN_DIR)
 	@rm -rf $(DST_DIR)
+	@rm -rf $(LIB_DIR)
 	@rm -f $(CPPUNIT_RESULTS)
 	@rm -f $(CPPCHECK_RESULTS)
 	@rm -f $(CPPUNIT_RESULTS_TXT)
 	@rm -f $(CPPCHECK_RESULTS_TXT)
-	@rm -f $(SWIG_SRC)
-	@rm -f $(SWIG_PY)
 
 cppunit-xml: $(BIN_DIR)unittest
 	@$(BIN_DIR)unittest --xml
@@ -167,14 +158,6 @@ releasefile:
 	@echo '' >> $(SRC_DIR)/common/Release.h
 	@echo '#endif' >> $(SRC_DIR)/common/Release.h
 
-
-# Shared Libraries
-# ==============================
-
-$(LIB_DIR)_Library.so: $(SWIG_OBJ) $(APP_OBJS)
-	@mkdir -p $(LIB_DIR)
-	@g++ -shared $(APP_OBJS) $(SWIG_OBJ) -o $(LIB_DIR)_Library.so
-
 # Linking
 # ==============================
 
@@ -187,20 +170,6 @@ $(BIN_DIR)unittest: $(UNITTEST_OBJS) $(OBJ_DIR)mains/unittest-main.o
 	@echo "Linking UNITTEST_OBJS into $@"
 	@mkdir -p $(BIN_DIR)
 	@$(CC) $(UNITTEST_OBJS) $(LIBS) -lcppunit -o $@
-
-# Compiling Swig
-# ==============================
-# Generating and then compling the swig wrapper for python
-
-$(SWIG_OBJ): $(SWIG_SRC)
-	@echo "Compling $< into $@"
-	@mkdir -p $(dir $@)
-	@$(CC) $(CC_FLAGS) $(CC_INCLUDES) -c $< -o $@
-
-$(SWIG_SRC): $(SWIG_INT)
-	@echo "Compling $< into $@"
-	@mkdir -p $(dir $@)
-	@swig -c++ -python $<
 
 # Compiling Mains
 # ==============================
@@ -224,8 +193,3 @@ $(OBJ_DIR)%.o: %.cpp %.h
 	@echo "Compling $< into $@"
 	@mkdir -p $(dir $@)
 	@$(CC) $(CC_FLAGS) $(CC_INCLUDES) -c $< -o $@
-
-
-
-
-
