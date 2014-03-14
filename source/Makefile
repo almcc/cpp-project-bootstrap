@@ -21,13 +21,23 @@ CPPUNIT_RESULTS_TXT = cppunit-results.txt
 # ==============================
 
 CC = g++
-CC_INCLUDES = -Isrc/common/ -Isrc/test/common -I/usr/local/include/ -I/usr/include/ -I/usr/include/python2.6/
+CC_INCLUDES = -Isrc/common/ \
+							-Isrc/test/common \
+							-I/usr/local/include/ \
+							-I/usr/include/
 CC_FLAGS = -g -Wall -fPIC
 
-# Libraries
+# (Required) Shared Libraries
 # ==============================
 
-LIBS = -l xmlrpc_server_abyss++
+SHARED_LIB_INC = -L/usr/lib -L/usr/lib64
+SHARED_LIBS = -l xmlrpc_server_abyss++
+
+# (Required) Static Libraries
+# ==============================
+
+STATIC_LIB_INC =
+STATIC_LIBS =
 
 # Directories
 # ==============================
@@ -60,8 +70,16 @@ TEST_OBJS = $(patsubst src/test%,obj/test%,$(TEST_SRCS:.cpp=.o))
 # Bin specific Objects
 # ==============================
 
-APP_OBJS = $(COMMON_OBJS) obj/mains/app-main.o
+APP_OBJS = $(COMMON_OBJS) obj/mains/$(NAME)-main.o
 UNITTEST_OBJS = $(COMMON_OBJS) $(TEST_OBJS) obj/mains/unittest-main.o
+
+# Lib
+# ==============================
+
+LIB_NAME = Bob
+LIB_SO = lib$(LIB_NAME).so
+LIB_A = lib$(LIB_NAME).a
+LIB_OBJS = $(COMMON_OBJS)
 
 # Targets
 # ==============================
@@ -70,9 +88,9 @@ UNITTEST_OBJS = $(COMMON_OBJS) $(TEST_OBJS) obj/mains/unittest-main.o
 
 new: bins libs
 
-bins: $(BIN_DIR)app
+bins: $(BIN_DIR)$(NAME)
 
-libs:
+libs: $(LIB_DIR)$(LIB_SO) $(LIB_DIR)$(LIB_A)
 
 fresh: clean new
 
@@ -117,17 +135,17 @@ ci-xml: fresh cppunit-xml cppcheck-xml
 
 ci: fresh cppunit cppcheck
 
-install:
+install: bins
 	@echo "Installing to $(DESTDIR)"
-	mkdir -p $(DESTDIR)/usr/local/bin/
-	cp bin/app $(DESTDIR)/usr/local/bin/
-	mkdir -p $(DESTDIR)/etc/app
-	cp system/etc/app/* $(DESTDIR)/etc/app/
+	mkdir -p $(DESTDIR)/opt/$(NAME)/
+	cp bin/$(NAME) $(DESTDIR)/opt/$(NAME)/
+	mkdir -p $(DESTDIR)/etc/$(NAME)
+	cp $(SYS_DIR)etc/$(NAME)/* $(DESTDIR)/etc/$(NAME)/
 
 uninstall:
 	@echo "Uninstalling from $(DESTDIR)"
-	rm -rf $(DESTDIR)/usr/local/bin/app
-	rm -rf $(DESTDIR)/etc/app
+	rm -rf $(DESTDIR)/opt/$(NAME)/$(NAME)
+	rm -rf $(DESTDIR)/etc/$(NAME)
 
 dist:
 	@echo "Making distribution"
@@ -158,24 +176,37 @@ releasefile:
 	@echo '' >> $(SRC_DIR)/common/Release.h
 	@echo '#endif' >> $(SRC_DIR)/common/Release.h
 
+# Wrapping Libraries
+# ==============================
+
+$(LIB_DIR)$(LIB_SO): $(LIB_OBJS)
+	@echo "Wrapping LIB_OBJS into $@"
+	@mkdir -p $(LIB_DIR)
+	@$(CC) -shared $(LIB_OBJS) -o $@
+
+$(LIB_DIR)$(LIB_A): $(LIB_OBJS)
+	@echo "Wrapping LIB_OBJS into $@"
+	@mkdir -p $(LIB_DIR)
+	@ar rvs $@ $(LIB_OBJS)
+
 # Linking
 # ==============================
 
-$(BIN_DIR)app: $(APP_OBJS) $(OBJ_DIR)mains/app-main.o
+$(BIN_DIR)$(NAME): $(APP_OBJS) $(OBJ_DIR)mains/$(NAME)-main.o
 	@echo "Linking APP_OBJS into $@"
 	@mkdir -p $(BIN_DIR)
-	@$(CC) $(APP_OBJS) $(LIBS) -o $@
+	@$(CC) $(APP_OBJS) $(SHARED_LIB_INC) $(SHARED_LIBS) -o $@
 
 $(BIN_DIR)unittest: $(UNITTEST_OBJS) $(OBJ_DIR)mains/unittest-main.o
 	@echo "Linking UNITTEST_OBJS into $@"
 	@mkdir -p $(BIN_DIR)
-	@$(CC) $(UNITTEST_OBJS) $(LIBS) -lcppunit -o $@
+	@$(CC) $(UNITTEST_OBJS) $(SHARED_LIB_INC) $(SHARED_LIBS) -lcppunit -o $@
 
 # Compiling Mains
 # ==============================
 # Compiling mains separately as there is no header file for main files.
 
-$(OBJ_DIR)mains/app-main.o: $(SRC_DIR)mains/app-main.cpp releasefile
+$(OBJ_DIR)mains/$(NAME)-main.o: $(SRC_DIR)mains/$(NAME)-main.cpp releasefile
 	@echo "Compling $< into $@"
 	@mkdir -p $(dir $@)
 	@$(CC) $(CC_FLAGS) $(CC_INCLUDES) -c $< -o $@

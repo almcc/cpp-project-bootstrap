@@ -1,4 +1,3 @@
-
 Name:           %{name}
 Version:        %{version}
 Release:        %{release_label}%{?dist}
@@ -28,7 +27,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 rm -rf $RPM_BUILD_ROOT
 
 %files
-/usr/local/bin/app
+/opt/app/*
 /etc/app/*
 
 %defattr(-,root,root,-)
