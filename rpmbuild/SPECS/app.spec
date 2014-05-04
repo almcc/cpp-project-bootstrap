@@ -29,6 +29,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 /opt/app/*
 /etc/app/*
+/etc/init.d/app
 
 %defattr(-,root,root,-)
 %doc

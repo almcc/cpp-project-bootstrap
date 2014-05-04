@@ -39,11 +39,35 @@ release: clean
 
 	@$(MAKE) -C documentation/ docs NAME=$(NAME) MAJOR=$(MAJOR) MINOR=$(MINOR) FIX=$(FIX) LABEL=$(LABEL) BUILD=$(BUILD)
 
-	@cp documentation/sphinx/_build/latex/$(NAME).pdf release/$(RELEASE)-manual.pdf
+	@cp documentation/sphinx/_build_api/latex/$(NAME).pdf release/$(RELEASE)-api.pdf
+	@mkdir -p release/$(RELEASE)-api
+	@cp -r documentation/sphinx/_build_api/dirhtml/* release/$(RELEASE)-api/
+	@cd release/; tar cvzf $(RELEASE)-api.tar.gz $(RELEASE)-api/*
+	@rm -rf release/$(RELEASE)-api
+
+	@cp documentation/sphinx/_build_manual/latex/$(NAME).pdf release/$(RELEASE)-manual.pdf
 	@mkdir -p release/$(RELEASE)-manual
-	@cp -r documentation/sphinx/_build/dirhtml/* release/$(RELEASE)-manual/
+	@cp -r documentation/sphinx/_build_manual/dirhtml/* release/$(RELEASE)-manual/
 	@cd release/; tar cvzf $(RELEASE)-manual.tar.gz $(RELEASE)-manual/*
 	@rm -rf release/$(RELEASE)-manual
+
+	@cp documentation/sphinx/_build_master/latex/$(NAME).pdf release/$(RELEASE)-master.pdf
+	@mkdir -p release/$(RELEASE)-master
+	@cp -r documentation/sphinx/_build_master/dirhtml/* release/$(RELEASE)-master/
+	@cd release/; tar cvzf $(RELEASE)-master.tar.gz $(RELEASE)-master/*
+	@rm -rf release/$(RELEASE)-master
+
+	@cp documentation/sphinx/_build_support/latex/$(NAME).pdf release/$(RELEASE)-support.pdf
+	@mkdir -p release/$(RELEASE)-support
+	@cp -r documentation/sphinx/_build_support/dirhtml/* release/$(RELEASE)-support/
+	@cd release/; tar cvzf $(RELEASE)-support.tar.gz $(RELEASE)-support/*
+	@rm -rf release/$(RELEASE)-support
+
+	@cp documentation/sphinx/_build_test-report/latex/$(NAME).pdf release/$(RELEASE)-test-report.pdf
+	@mkdir -p release/$(RELEASE)-test-report
+	@cp -r documentation/sphinx/_build_test-report/dirhtml/* release/$(RELEASE)-test-report/
+	@cd release/; tar cvzf $(RELEASE)-test-report.tar.gz $(RELEASE)-test-report/*
+	@rm -rf release/$(RELEASE)-test-report
 
 	@cp documentation/doxygen/build/latex/refman.pdf release/$(RELEASE)-source-reference.pdf
 	@mkdir -p release/$(RELEASE)-source-reference

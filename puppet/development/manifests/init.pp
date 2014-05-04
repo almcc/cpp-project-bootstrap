@@ -41,9 +41,6 @@ class development {
   package { 'tree':
     ensure => installed,
   }
-  package { 'boost-devel':
-    ensure => installed,
-  }
   package { 'swig':
     ensure => installed,
   }

@@ -1,38 +1,84 @@
-#include "App/Logging/Logger.h"
-#include "App/Configuration/FileParser.h"
-#include "App/Configuration/ArgumentParser.h"
-#include "App/Configuration/Settings.h"
+#define WIN32_LEAN_AND_MEAN  /* required by xmlrpc-c/server_abyss.hpp */
 
-using namespace App::Logging;
-using namespace App::Configuration;
+#include <cassert>
+#include <stdexcept>
+#include <iostream>
+#include <unistd.h>
 
-/**
- * Main
- * @param  argc
- * @param  argv
- * @return
- */
-int main( int argc, char **argv)
-{
-  int returnValue = 0;
+using namespace std;
 
-  Settings settings;
+#include <xmlrpc-c/base.hpp>
+#include <xmlrpc-c/registry.hpp>
+#include <xmlrpc-c/server_abyss.hpp>
 
-  // Load settings from a file.
-  FileParser fparser;
-  fparser.parse("/etc/app/settings.txt", &settings);
 
-  // Overide settings with the command line.
-  ArgumentParser aparser;
-  aparser.defineOption("LOG_FILE", "/var/log/app/app.log");
-  aparser.defineOption("LOG_LEVEL", "NORMAL");
-  aparser.parse(argc, argv);
-  aparser.exportOptions(&settings);
+class sampleAddMethod : public xmlrpc_c::method {
+public:
+    sampleAddMethod() {
+        this->_signature = "i:ii";
+        this->_help = "This method adds two integers together";
+    }
+    void
+    execute(xmlrpc_c::paramList const& paramList,
+            xmlrpc_c::value *   const  retvalP) {
 
-  Logger log;
-  log.setLevel(settings.get("LOG_LEVEL"));
-  log.logSuccess("Setting Loaded.");
+        int const addend(paramList.getInt(0));
+        int const adder(paramList.getInt(1));
 
-  log.logInformation("Exiting.");
-  return returnValue;
+        xmlrpc_env env;
+
+        xmlrpc_env_init(&env);
+
+        xmlrpc_value * myArrayP;
+        xmlrpc_value * itemP;
+        xmlrpc_value * itemB;
+
+        myArrayP = xmlrpc_array_new(&env);
+
+        itemP = xmlrpc_string_new(&env, "This is array item 0");
+        itemB = xmlrpc_int_new(&env, addend + adder);
+
+        xmlrpc_array_append_item(&env, myArrayP, itemP);
+        xmlrpc_array_append_item(&env, myArrayP, itemB);
+
+        xmlrpc_DECREF(itemP);
+        xmlrpc_DECREF(itemB);
+
+        xmlrpc_value * myStructP;
+        xmlrpc_value * memberValueP;
+        myStructP = xmlrpc_struct_new(&env);
+        memberValueP = xmlrpc_double_new(&env, 19.2);
+        xmlrpc_struct_set_value(&env, myStructP, "temperature", memberValueP);
+        xmlrpc_DECREF(memberValueP);
+        xmlrpc_array_append_item(&env, myArrayP, myStructP);
+
+        paramList.verifyEnd(2);
+
+        *retvalP = myArrayP;
+    }
+};
+
+
+
+int
+main(int           const argc,
+     const char ** const argv) {
+
+    xmlrpc_c::registry myRegistry;
+
+    xmlrpc_c::methodPtr const sampleAddMethodP(new sampleAddMethod);
+
+    myRegistry.addMethod("sample.add", sampleAddMethodP);
+
+    xmlrpc_c::serverAbyss myAbyssServer(
+        myRegistry,
+        8080,              // TCP port on which to listen
+        "/tmp/xmlrpc_log"  // Log file
+        );
+
+    myAbyssServer.run();
+    // xmlrpc_c::serverAbyss.run() never returns
+    assert(false);
+
+    return 0;
 }

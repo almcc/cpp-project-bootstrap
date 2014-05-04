@@ -23,16 +23,16 @@ CPPUNIT_RESULTS_TXT = cppunit-results.txt
 CC = g++
 CC_INCLUDES = -Isrc/common/ \
 							-Isrc/test/common \
-							-I/usr/local/include/ \
-							-I/usr/include/
-CC_FLAGS = -g -Wall
+							-I/usr/include/ \
+							-I/usr/local/include/
+CC_FLAGS = -g -Wall -fPIC
 LK_FLAGS =
 
 # (Required) Libraries
 # ==============================
 
 LIB_INC = -L/usr/lib -L/usr/lib64
-SHARED_LIBS =
+SHARED_LIBS =  -lxmlrpc_server_abyss++
 STATIC_LIBS =
 
 # Directories
@@ -134,14 +134,17 @@ ci: fresh cppunit cppcheck
 install: bins
 	@echo "Installing to $(DESTDIR)"
 	mkdir -p $(DESTDIR)/opt/$(NAME)/
-	cp bin/$(NAME) $(DESTDIR)/opt/$(NAME)/
+	cp -p bin/$(NAME) $(DESTDIR)/opt/$(NAME)/
 	mkdir -p $(DESTDIR)/etc/$(NAME)
-	cp $(SYS_DIR)etc/$(NAME)/* $(DESTDIR)/etc/$(NAME)/
+	cp -p $(SYS_DIR)etc/$(NAME)/* $(DESTDIR)/etc/$(NAME)/
+	mkdir -p $(DESTDIR)/etc/init.d/
+	cp -p $(SYS_DIR)etc/init.d/$(NAME) $(DESTDIR)/etc/init.d/$(NAME)
 
 uninstall:
 	@echo "Uninstalling from $(DESTDIR)"
 	rm -rf $(DESTDIR)/opt/$(NAME)/$(NAME)
 	rm -rf $(DESTDIR)/etc/$(NAME)
+	rm -rf $(DESTDIR)/etc/init.d/$(NAME)
 
 dist:
 	@echo "Making distribution"
