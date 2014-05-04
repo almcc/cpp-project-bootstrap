@@ -101,9 +101,11 @@ clean:
 	@rm -f $(CPPUNIT_RESULTS_TXT)
 	@rm -f $(CPPCHECK_RESULTS_TXT)
 	@rm -rf cppcheck-results-html/
+	@rm -f xunit-results.xml
 
 cppunit-xml: $(BIN_DIR)unittest
 	@$(BIN_DIR)unittest --xml
+	@xsltproc  -o xunit-results.xml ../scripts/cpp2junit.xslt $(CPPUNIT_RESULTS)
 
 cppunit-txt: $(BIN_DIR)unittest
 	@$(BIN_DIR)unittest > $(CPPUNIT_RESULTS_TXT)

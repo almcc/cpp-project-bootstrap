@@ -53,6 +53,9 @@ class development {
   package { 'boost-static':
     ensure => installed,
   }
+  package { 'libxslt':
+    ensure => installed,
+  }
   exec { 'sphinx':
     command => 'easy_install -U Sphinx',
     path    => [ '/usr/bin/' ],
