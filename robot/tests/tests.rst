@@ -1,5 +1,6 @@
-Example
--------
+==============
+ System Tests
+==============
 
 Bla Bla Bla
 

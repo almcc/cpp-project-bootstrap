@@ -10,4 +10,6 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
    content/manual/index
    content/api/index
    content/support/index
-   content/tests/tests
+   content/system-tests/tests
+   content/unit-tests/index
+

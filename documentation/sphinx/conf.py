@@ -33,6 +33,7 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
     'sphinx.ext.ifconfig',
+    'breathe'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -331,3 +332,9 @@ texinfo_documents = [
 
 # Example configuration for intersphinx: refer to the Python standard library.
 # intersphinx_mapping = {'http://docs.python.org/': None}
+
+breathe_projects = {
+    "app":"../doxygen/xml/xml/",
+}
+
+breathe_default_project = "app"

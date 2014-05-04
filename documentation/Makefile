@@ -13,9 +13,24 @@ RELEASE = $(NAME)-$(VERSION)-$(LABEL)$(BUILD)
 # ==============================
 WD=$(shell pwd)
 
+# Functions
+# ==============================
+
+define build
+@ln -s $(WD)/sphinx/variants/$1.rst sphinx/index.rst
+@cd doxygen; doxygen Doxyfile-XML
+@mkdir -p sphinx/content/unit-tests
+@python parse-unit-tests.py > sphinx/content/unit-tests/index.rst
+@ln -s $(WD)/../robot/tests/ sphinx/content/system-tests
+@export SPHINX_PROJECT_NAME="$(NAME)"; $(MAKE) -C sphinx/ clean html dirhtml latexpdf VERSION=$(VERSION) RELEASE=$(RELEASE)
+@rm -f sphinx/content/system-tests
+@rm sphinx/index.rst
+@mv sphinx/_build sphinx/_build_$1
+endef
+
 # Targets
 # ==============================
-.PHONY: docs doxygen sphinx sphinx-api sphinx-manual sphinx-master sphinx-support sphinx-test-report sphinx-about clean
+.PHONY: docs doxygen sphinx sphinx-api sphinx-manual sphinx-master sphinx-support sphinx-test-report sphinx-about clean clean-sphinx clean-doxygen
 
 docs: clean doxygen sphinx
 
@@ -30,46 +45,28 @@ doxygen:
 sphinx: sphinx-api sphinx-manual sphinx-master sphinx-support sphinx-test-report sphinx-about
 
 sphinx-api:
-	@ln -s $(WD)/sphinx/variants/api.rst sphinx/index.rst
-	@ln -s $(WD)/../robot/tests/ sphinx/content/tests
-	@export SPHINX_PROJECT_NAME="$(NAME)"; $(MAKE) -C sphinx/ clean html dirhtml latexpdf VERSION=$(VERSION) RELEASE=$(RELEASE)
-	@rm -f sphinx/content/tests
-	@rm sphinx/index.rst
-	@mv sphinx/_build sphinx/_build_api
+	$(call build,api)
 
 sphinx-manual:
-	@ln -s $(WD)/sphinx/variants/manual.rst sphinx/index.rst
-	@ln -s $(WD)/../robot/tests/ sphinx/content/tests
-	@export SPHINX_PROJECT_NAME="$(NAME)"; $(MAKE) -C sphinx/ clean html dirhtml latexpdf VERSION=$(VERSION) RELEASE=$(RELEASE)
-	@rm -f sphinx/content/tests
-	@rm sphinx/index.rst
-	@mv sphinx/_build sphinx/_build_manual
+	$(call build,manual)
 
 sphinx-master:
-	@ln -s $(WD)/sphinx/variants/master.rst sphinx/index.rst
-	@ln -s $(WD)/../robot/tests/ sphinx/content/tests
-	@export SPHINX_PROJECT_NAME="$(NAME)"; $(MAKE) -C sphinx/ clean html dirhtml latexpdf VERSION=$(VERSION) RELEASE=$(RELEASE)
-	@rm -f sphinx/content/tests
-	@rm sphinx/index.rst
-	@mv sphinx/_build sphinx/_build_master
+	$(call build,master)
 
 sphinx-support:
-	@ln -s $(WD)/sphinx/variants/support.rst sphinx/index.rst
-	@ln -s $(WD)/../robot/tests/ sphinx/content/tests
-	@export SPHINX_PROJECT_NAME="$(NAME)"; $(MAKE) -C sphinx/ clean html dirhtml latexpdf VERSION=$(VERSION) RELEASE=$(RELEASE)
-	@rm -f sphinx/content/tests
-	@rm sphinx/index.rst
-	@mv sphinx/_build sphinx/_build_support
+	$(call build,support)
 
 sphinx-test-report:
-	@ln -s $(WD)/sphinx/variants/test-report.rst sphinx/index.rst
-	@ln -s $(WD)/../robot/tests/ sphinx/content/tests
-	@export SPHINX_PROJECT_NAME="$(NAME)"; $(MAKE) -C sphinx/ clean html dirhtml latexpdf VERSION=$(VERSION) RELEASE=$(RELEASE)
-	@rm -f sphinx/content/tests
-	@rm sphinx/index.rst
-	@mv sphinx/_build sphinx/_build_test-report
+	$(call build,test-report)
 
+clean: clean-sphinx clean-doxygen
 
-clean:
-	@rm -rf doxygen/build
+clean-sphinx:
+	@rm -f sphinx/index.rst
+	@rm -f sphinx/content/system-tests
 	@rm -rf sphinx/_build*
+	@rm -rf sphinx/content/unit-tests
+	@rm -rf doxygen/xml
+
+clean-doxygen:
+	@rm -rf doxygen/build

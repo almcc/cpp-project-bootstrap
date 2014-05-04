@@ -62,6 +62,11 @@ class development {
     path    => [ '/usr/bin/' ],
     require => [Package['python-pip'], Exec['sphinx']]
   }
+  exec { 'breathe':
+    command => 'pip install breathe',
+    path    => [ '/usr/bin/' ],
+    require => [Package['python-pip'], Exec['sphinx']]
+  }
   exec { 'robotframework':
     command => 'pip install robotframework',
     path    => [ '/usr/bin/' ],

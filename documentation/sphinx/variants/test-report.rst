@@ -6,4 +6,6 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 .. toctree::
    :maxdepth: 2
 
-   content/tests/tests
+   content/system-tests/tests
+   content/unit-tests/index
+

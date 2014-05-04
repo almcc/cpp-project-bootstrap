@@ -13,6 +13,17 @@ RELEASE = $(NAME)-$(VERSION)-$(LABEL)$(BUILD)
 # ==============================
 WD=$(shell pwd)
 
+# Functions
+# ==============================
+
+define releaseSphinxDocs
+@cp documentation/sphinx/_build_$1/latex/$(NAME).pdf release/$(RELEASE)-$1.pdf
+@mkdir -p release/$(RELEASE)-$1-html
+@cp -r documentation/sphinx/_build_$1/dirhtml/* release/$(RELEASE)-$1-html/
+@cd release/; tar cvzf $(RELEASE)-$1-html.tar.gz $(RELEASE)-$1-html/*
+@rm -rf release/$(RELEASE)-$1-html
+endef
+
 # Targets
 # ==============================
 .PHONY: release clean
@@ -39,41 +50,17 @@ release: clean
 
 	@$(MAKE) -C documentation/ docs NAME=$(NAME) MAJOR=$(MAJOR) MINOR=$(MINOR) FIX=$(FIX) LABEL=$(LABEL) BUILD=$(BUILD)
 
-	@cp documentation/sphinx/_build_api/latex/$(NAME).pdf release/$(RELEASE)-api.pdf
-	@mkdir -p release/$(RELEASE)-api
-	@cp -r documentation/sphinx/_build_api/dirhtml/* release/$(RELEASE)-api/
-	@cd release/; tar cvzf $(RELEASE)-api.tar.gz $(RELEASE)-api/*
-	@rm -rf release/$(RELEASE)-api
-
-	@cp documentation/sphinx/_build_manual/latex/$(NAME).pdf release/$(RELEASE)-manual.pdf
-	@mkdir -p release/$(RELEASE)-manual
-	@cp -r documentation/sphinx/_build_manual/dirhtml/* release/$(RELEASE)-manual/
-	@cd release/; tar cvzf $(RELEASE)-manual.tar.gz $(RELEASE)-manual/*
-	@rm -rf release/$(RELEASE)-manual
-
-	@cp documentation/sphinx/_build_master/latex/$(NAME).pdf release/$(RELEASE)-master.pdf
-	@mkdir -p release/$(RELEASE)-master
-	@cp -r documentation/sphinx/_build_master/dirhtml/* release/$(RELEASE)-master/
-	@cd release/; tar cvzf $(RELEASE)-master.tar.gz $(RELEASE)-master/*
-	@rm -rf release/$(RELEASE)-master
-
-	@cp documentation/sphinx/_build_support/latex/$(NAME).pdf release/$(RELEASE)-support.pdf
-	@mkdir -p release/$(RELEASE)-support
-	@cp -r documentation/sphinx/_build_support/dirhtml/* release/$(RELEASE)-support/
-	@cd release/; tar cvzf $(RELEASE)-support.tar.gz $(RELEASE)-support/*
-	@rm -rf release/$(RELEASE)-support
-
-	@cp documentation/sphinx/_build_test-report/latex/$(NAME).pdf release/$(RELEASE)-test-report.pdf
-	@mkdir -p release/$(RELEASE)-test-report
-	@cp -r documentation/sphinx/_build_test-report/dirhtml/* release/$(RELEASE)-test-report/
-	@cd release/; tar cvzf $(RELEASE)-test-report.tar.gz $(RELEASE)-test-report/*
-	@rm -rf release/$(RELEASE)-test-report
+	$(call releaseSphinxDocs,api)
+	$(call releaseSphinxDocs,manual)
+	$(call releaseSphinxDocs,master)
+	$(call releaseSphinxDocs,support)
+	$(call releaseSphinxDocs,test-report)
 
 	@cp documentation/doxygen/build/latex/refman.pdf release/$(RELEASE)-source-reference.pdf
-	@mkdir -p release/$(RELEASE)-source-reference
-	@cp -r documentation/doxygen/build/html/* release/$(RELEASE)-source-reference/
-	@cd release/; tar cvzf $(RELEASE)-source-reference.tar.gz $(RELEASE)-source-reference/*
-	@rm -rf release/$(RELEASE)-source-reference
+	@mkdir -p release/$(RELEASE)-source-reference-html
+	@cp -r documentation/doxygen/build/html/* release/$(RELEASE)-source-reference-html/
+	@cd release/; tar cvzf $(RELEASE)-source-reference-html.tar.gz $(RELEASE)-source-reference-html/*
+	@rm -rf release/$(RELEASE)-source-reference-html
 
 	@ls -lh release/
 
