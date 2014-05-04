@@ -80,7 +80,7 @@ LIB_OBJS = $(COMMON_OBJS)
 # Targets
 # ==============================
 
-.PHONY : new bins libs fresh clean vars cppunit-xml cppunit-txt cppunit cppcheck-xml cppcheck-txt cppcheck ci ci-xml ci-txt install uninstall dist releasefile
+.PHONY : new bins libs fresh clean vars cppunit-xml cppunit-txt cppunit cppcheck-xml cppcheck-html cppcheck-txt cppcheck install uninstall dist releasefile
 
 new: bins libs
 
@@ -100,6 +100,7 @@ clean:
 	@rm -f $(CPPCHECK_RESULTS)
 	@rm -f $(CPPUNIT_RESULTS_TXT)
 	@rm -f $(CPPCHECK_RESULTS_TXT)
+	@rm -rf cppcheck-results-html/
 
 cppunit-xml: $(BIN_DIR)unittest
 	@$(BIN_DIR)unittest --xml
@@ -116,6 +117,9 @@ cppunit: cppunit-txt
 cppcheck-xml:
 	@cppcheck --quiet --enable=all --xml --suppress=missingInclude -Isrc/common/ $(SRCS) $(HEADERS) 2> $(CPPCHECK_RESULTS)
 
+cppcheck-html: cppcheck-xml
+	../scripts/cppcheck-htmlreport --file=$(CPPCHECK_RESULTS) --report-dir=cppcheck-results-html --source-dir=.
+
 cppcheck-txt:
 	@cppcheck --quiet --enable=all --suppress=missingInclude -Isrc/common/ $(SRCS) $(HEADERS) 2> $(CPPCHECK_RESULTS_TXT)
 
@@ -124,12 +128,6 @@ cppcheck: cppcheck-txt
 	@echo "CPP Check:"
 	@cat $(CPPCHECK_RESULTS_TXT)
 	@echo
-
-ci-txt: fresh cppunit-txt cppcheck-txt
-
-ci-xml: fresh cppunit-xml cppcheck-xml
-
-ci: fresh cppunit cppcheck
 
 install: bins
 	@echo "Installing to $(DESTDIR)"

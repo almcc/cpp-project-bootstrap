@@ -31,9 +31,13 @@ endef
 release: clean
 	@mkdir -p release/
 
-	@$(MAKE) -C source/ ci-txt dist NAME=$(NAME) MAJOR=$(MAJOR) MINOR=$(MINOR) FIX=$(FIX) LABEL=$(LABEL) BUILD=$(BUILD)
+	@$(MAKE) -C source/ cppunit-txt dist NAME=$(NAME) MAJOR=$(MAJOR) MINOR=$(MINOR) FIX=$(FIX) LABEL=$(LABEL) BUILD=$(BUILD)
 	cp source/cppunit-results.txt release/$(RELEASE)-cppunit-results.txt
-	cp source/cppcheck-results.txt release/$(RELEASE)-check-results.txt
+
+	@$(MAKE) -C source/ cppcheck-html dist NAME=$(NAME) MAJOR=$(MAJOR) MINOR=$(MINOR) FIX=$(FIX) LABEL=$(LABEL) BUILD=$(BUILD)
+	cp -r source/cppcheck-results-html release/$(RELEASE)-cppcheck-results-html
+	@cd release/; tar cvzf $(RELEASE)-cppcheck-results-html.tar.gz $(RELEASE)-cppcheck-results-html/*
+	@rm -rf release/$(RELEASE)-cppcheck-results-html
 
 	@$(MAKE) -C robot/ robot NAME=$(NAME) MAJOR=$(MAJOR) MINOR=$(MINOR) FIX=$(FIX) LABEL=$(LABEL) BUILD=$(BUILD)
 	@cp robot/$(RELEASE)-robot-report.html release/$(RELEASE)-robot-report.html
