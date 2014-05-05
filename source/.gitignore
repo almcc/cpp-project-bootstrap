@@ -2,5 +2,6 @@ dist/
 bin/
 obj/
 lib/
-cppunit-results.*
-cppcheck-results.*
+xunit*
+cppunit*
+cppcheck*
