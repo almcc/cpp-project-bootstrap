@@ -56,6 +56,9 @@ class development {
   package { 'libxslt':
     ensure => installed,
   }
+  package { 'lcov-1.10':
+    ensure => installed,
+  }
   exec { 'sphinx':
     command => 'easy_install -U Sphinx',
     path    => [ '/usr/bin/' ],

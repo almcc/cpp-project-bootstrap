@@ -31,10 +31,15 @@ endef
 release: clean
 	@mkdir -p release/
 
-	@$(MAKE) -C source/ cppunit-txt dist NAME=$(NAME) MAJOR=$(MAJOR) MINOR=$(MINOR) FIX=$(FIX) LABEL=$(LABEL) BUILD=$(BUILD)
+	@$(MAKE) -C source/ cppunit-txt NAME=$(NAME) MAJOR=$(MAJOR) MINOR=$(MINOR) FIX=$(FIX) LABEL=$(LABEL) BUILD=$(BUILD)
 	cp source/cppunit-results.txt release/$(RELEASE)-cppunit-results.txt
 
-	@$(MAKE) -C source/ cppcheck-html dist NAME=$(NAME) MAJOR=$(MAJOR) MINOR=$(MINOR) FIX=$(FIX) LABEL=$(LABEL) BUILD=$(BUILD)
+	@$(MAKE) -C source/ coverage NAME=$(NAME) MAJOR=$(MAJOR) MINOR=$(MINOR) FIX=$(FIX) LABEL=$(LABEL) BUILD=$(BUILD)
+	cp -r source/cppunit-coverage-html release/$(RELEASE)-cppunit-coverage-html
+	@cd release/; tar cvzf $(RELEASE)-cppunit-coverage-html.tar.gz $(RELEASE)-cppunit-coverage-html/*
+	@rm -rf release/$(RELEASE)-cppunit-coverage-html
+
+	@$(MAKE) -C source/ cppcheck-html NAME=$(NAME) MAJOR=$(MAJOR) MINOR=$(MINOR) FIX=$(FIX) LABEL=$(LABEL) BUILD=$(BUILD)
 	cp -r source/cppcheck-results-html release/$(RELEASE)-cppcheck-results-html
 	@cd release/; tar cvzf $(RELEASE)-cppcheck-results-html.tar.gz $(RELEASE)-cppcheck-results-html/*
 	@rm -rf release/$(RELEASE)-cppcheck-results-html

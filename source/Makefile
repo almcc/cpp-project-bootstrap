@@ -28,6 +28,9 @@ CC_INCLUDES = -Isrc/common/ \
 CC_FLAGS = -g -Wall -fPIC
 LK_FLAGS =
 
+coverage: CC_FLAGS = -g -Wall -fPIC --coverage
+coverage: LK_FLAGS = --coverage
+
 # (Required) Libraries
 # ==============================
 
@@ -80,7 +83,7 @@ LIB_OBJS = $(COMMON_OBJS)
 # Targets
 # ==============================
 
-.PHONY : new bins libs fresh clean vars cppunit-xml cppunit-txt cppunit cppcheck-xml cppcheck-html cppcheck-txt cppcheck install uninstall dist releasefile
+.PHONY : new bins libs fresh clean vars cppunit-xml cppunit-txt cppunit cppcheck-xml cppcheck-html cppcheck-txt cppcheck install uninstall dist releasefile coverage
 
 new: bins libs
 
@@ -102,6 +105,9 @@ clean:
 	@rm -f $(CPPCHECK_RESULTS_TXT)
 	@rm -rf cppcheck-results-html/
 	@rm -f xunit-results.xml
+	@rm -f cppunit-coverage.info
+	@rm -rf cppunit-coverage-html
+
 
 cppunit-xml: $(BIN_DIR)unittest
 	@$(BIN_DIR)unittest --xml
@@ -130,6 +136,10 @@ cppcheck: cppcheck-txt
 	@echo "CPP Check:"
 	@cat $(CPPCHECK_RESULTS_TXT)
 	@echo
+
+coverage: clean cppunit-xml
+	lcov -b . --no-external --capture --directory . --output-file cppunit-coverage.info
+	genhtml cppunit-coverage.info --output-directory cppunit-coverage-html
 
 install: bins
 	@echo "Installing to $(DESTDIR)"
